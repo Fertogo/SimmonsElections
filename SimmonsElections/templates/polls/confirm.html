@@ -1,0 +1,12 @@
+<h1>{{ poll.question }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+You have picked<br>
+1: {% if previous_1 %}{{previous_1}}{% else %}None{% endif %}<br>
+2: {% if previous_2 %}{{previous_2}}{% else %}None{% endif %}<br>
+3: {% if previous_3 %}{{previous_3}}{% else %}None{% endif %}<br>
+<br><br>
+That looks good! <a href="/polls">Go back to the main page.</a>
+<br><br>
+I don't like that. <a href="/polls/{{ poll.id }}">Go back to the poll!</a>

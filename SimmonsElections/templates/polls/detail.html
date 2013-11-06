@@ -1,0 +1,27 @@
+<h1>{{ poll.question }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+Pick your {% if choice_num %}{{ choice_num }}{% else %}1{% endif %} choice.
+<form action="/polls/{{ poll.id }}/vote/" method="post">
+{% csrf_token %}
+{% for choice in poll.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="this.form.submit()"/>
+    <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
+{% endfor %}
+<input type="hidden" name="choice_num" value="{% if choice_num %}{{ choice_num }}{% else %}1{% endif %}">
+<input type="hidden" name="kerb" value="merp">
+</form>
+<br><br>
+So far, you have picked<br>
+{% if not choice_num or choice_num == 1 %}
+1: None<br>
+2: None<br>
+3: None<br>
+{% else %}
+1: {% if previous_1 %}{{previous_1}}{% else %}None{% endif %}<br>
+2: {% if previous_2 %}{{previous_2}}{% else %}None{% endif %}<br>
+3: {% if previous_3 %}{{previous_3}}{% else %}None{% endif %}<br>
+{% endif %}
+<br><br>
+<a href="/polls">I'm done. Go back to the polls.</a>

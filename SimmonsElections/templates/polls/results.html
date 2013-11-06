@@ -1,0 +1,15 @@
+{% if latest_poll_list %}
+    <ul>
+    {% for poll in latest_poll_list %}
+        <li>{{ poll.question }}
+        <ul>
+        {% for choice in poll.choice_set.all %}
+            <li>{{ choice.choice }} -- {{ choice.num_first_selected }} 1st, {{ choice.num_second_selected }} 2nd, {{ choice.num_third_selected }} 3rd</li>
+        {% endfor %}
+        </ul>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
