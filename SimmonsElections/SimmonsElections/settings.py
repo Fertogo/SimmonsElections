@@ -9,10 +9,11 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# mysql database overridden in local settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'C:/Users/Allen/Desktop/Dropbox/backup/MIT Random/Simmons/Tech/SimmonsElections/results',                      # Or path to database file if using sqlite3.
+        'NAME': 'db.dat',
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -78,6 +79,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
+# Overriden for production site in local_settings
 SECRET_KEY = '^=l)5@w!ggq8=e!v&amp;fy7wq3zm4(!0ba98ai9r0yb3(&amp;nqx+2=-'
 
 # List of callables that know how to import templates from various sources.
@@ -106,7 +108,6 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "C:/Users/Allen/Desktop/Dropbox/backup/MIT Random/Simmons/Tech/SimmonsElections/SimmonsElections/templates",
 )
 
 INSTALLED_APPS = (
@@ -151,3 +152,11 @@ LOGGING = {
         },
     }
 }
+
+# Load local settings if they exist
+try:
+    from local_settings import *
+except ImportError, exp:
+    pass
+
+
