@@ -3,4 +3,4 @@
 *.pyc
 local_settings*.py
 *~
-SimmonsElections/SimmonsElections/migrations/*
+SimmonsElections/polls/migrations/*
