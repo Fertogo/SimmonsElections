@@ -27,7 +27,10 @@ def vote(request, poll_id):
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the poll voting form.
         try:
-            answer = AnswerSet.objects.get(name=kerb, question=p, active=True)
+            if choice_num == 1:
+                answer = AnswerSet(name=kerb, question=p, active=True)
+            else:
+                answer = AnswerSet.objects.get(name=kerb, question=p, active=True)
         except AnswerSet.DoesNotExist:
             answer = AnswerSet(name=kerb, question=p, active=True)
         return render_to_response('polls/detail.html', {

@@ -3,7 +3,7 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 Pick your {% if choice_num %}{{ choice_num }}{% else %}1{% endif %} choice.
-<form action="/polls/{{ poll.id }}/vote/" method="post">
+<form action="{% url poll_vote poll.id %}" method="post">
 {% csrf_token %}
 {% for choice in poll.choice_set.all %}
     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="this.form.submit()" {% if choice == previous_1 or choice == previous_2 or choice == previous_3 %}disabled{% endif %}/>
@@ -24,4 +24,4 @@ So far, you have picked<br>
 3: {% if previous_3 %}{{previous_3}}{% else %}None{% endif %}<br>
 {% endif %}
 <br><br>
-<a href="/polls">I'm done. Go back to the polls.</a>
+<a href="{% url poll_list %}">I'm done. Go back to the polls.</a>

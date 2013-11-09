@@ -7,11 +7,14 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>\d+)/$',
         DetailView.as_view(
             model=Poll,
-            template_name='polls/detail.html')),
+            template_name='polls/detail.html'),
+        name='poll_details'),
     url(r'^results/$',
         ListView.as_view(
             queryset=Poll.objects.all(),
             context_object_name='latest_poll_list',
-            template_name='polls/results.html')),
-    url(r'^(?P<poll_id>\d+)/vote/$', 'polls.views.vote'),
+            template_name='polls/results.html'),
+        name='poll_results'),
+    url(r'^(?P<poll_id>\d+)/vote/$', 'polls.views.vote',
+        name='poll_vote'),
 )
