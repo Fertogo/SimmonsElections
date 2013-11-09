@@ -4,9 +4,29 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from polls.models import Choice, Poll, AnswerSet
 
+try:
+    import subprocess
+    import ldap
+    import ldap.filter
+
+    from django.contrib.auth.middleware import RemoteUserMiddleware
+    from django.contrib.auth.backends import RemoteUserBackend
+    from django.contrib.auth.views import login
+    from django.contrib.auth import REDIRECT_FIELD_NAME
+    from django.http import HttpResponseRedirect
+    from django.contrib import auth
+    from django.core.exceptions import ObjectDoesNotExist
+    import settings
+    importedLdap = True
+except ImportError, exp:
+    importedLdap = False
+
 kerb = "cosmosd"
 
 def index(request):
+    kerb = str(importedLdap)
+    if importedLdap:
+        kerb = "rawr"
     latest_poll_list = Poll.objects.all()
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
