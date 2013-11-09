@@ -24,17 +24,9 @@ try:
 except ImportError, exp:
     importedLdap = False
 
+@login_required(login_url='/elections/polls/login')
 def index(request, **kwargs):
-    #user = User.objects.create_user('hi', 'allenpark@mit.edu', 'pw')
-    #user = authenticate(username='hi', password='pw')
-    #user = mit.ScriptsRemoteUserBackend.configure_user(user)
-    if importedLdap:
-        mit.scripts_login(request)
-        kerb = str(request.user)
-        if kerb == "AnonymousUser":
-            return HttpResponse("Use your certificate please!")
-    else:
-        kerb = "localhost"
+    kerb = str(request.user)
     latest_poll_list = Poll.objects.all()
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
@@ -45,14 +37,18 @@ def index(request, **kwargs):
             poll.answer = None
     return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'kerb': kerb})
 
-def vote(request, poll_id):
+def login(request):
     if importedLdap:
         mit.scripts_login(request)
-        kerb = str(request.user)
-        if kerb == "AnonymousUser":
-            return HttpResponse("Use your certificate please!")
+        if str(request.user) == "AnonymousUser":
+            return HttpResponse("Could not identify you by your certificate.")
     else:
-        kerb = "localhost"
+        return HttpResponse("Ldap not installed. Contact simmons-nomination@mit.edu with this error please.")
+    return HttpResponseRedirect(reverse('poll_list'))
+    
+@login_required(login_url='/elections/polls/login')
+def vote(request, poll_id):
+    kerb = str(request.user)
     p = get_object_or_404(Poll, pk=poll_id)
     choice_num = 1
     try:

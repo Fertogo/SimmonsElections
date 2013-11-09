@@ -2,6 +2,8 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+{% if kerb %}Hi {{ kerb }}!<br>{% endif %}
+
 Pick your {% if choice_num %}{{ choice_num }}{% else %}1{% endif %} choice.
 <form action="{% url poll_vote poll.id %}" method="post">
 {% csrf_token %}
