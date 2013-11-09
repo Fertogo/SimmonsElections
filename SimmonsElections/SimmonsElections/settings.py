@@ -95,8 +95,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'mit.views.ScriptsRemoteUserMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+   'mit.views.ScriptsRemoteUserBackend',
 )
 
 ROOT_URLCONF = 'SimmonsElections.urls'
@@ -123,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'polls',
     'south',
+    'mit',
 )
 
 # A sample logging configuration. The only tangible logging
