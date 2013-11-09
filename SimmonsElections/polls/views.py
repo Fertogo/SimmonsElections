@@ -9,26 +9,32 @@ try:
     import ldap
     import ldap.filter
 
+    from django.contrib import auth
     from django.contrib.auth.middleware import RemoteUserMiddleware
     from django.contrib.auth.backends import RemoteUserBackend
     from django.contrib.auth.views import login
-    from django.contrib.auth import REDIRECT_FIELD_NAME
+    from django.contrib.auth.decorators import login_required
+    from django.contrib.auth.models import User
+    from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
     from django.http import HttpResponseRedirect
-    from django.contrib import auth
     from django.core.exceptions import ObjectDoesNotExist
     from django.conf import settings
+    import mit
     importedLdap = True
 except ImportError, exp:
     importedLdap = False
 
-kerb = "cosmosd"
-
-def index(request):
-    #kerb = "mdp"
+def index(request, **kwargs):
+    #user = User.objects.create_user('hi', 'allenpark@mit.edu', 'pw')
+    #user = authenticate(username='hi', password='pw')
+    #user = mit.ScriptsRemoteUserBackend.configure_user(user)
     if importedLdap:
-        kerb = "rawr"
+        mit.scripts_login(request)
+        kerb = str(request.user)
+        if kerb == "AnonymousUser":
+            return HttpResponse("Use your certificate please!")
     else:
-        kerb = "nope"
+        pass
     latest_poll_list = Poll.objects.all()
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
@@ -40,11 +46,18 @@ def index(request):
     return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'kerb': kerb})
 
 def vote(request, poll_id):
+    if importedLdap:
+        mit.scripts_login(request)
+        kerb = str(request.user)
+        if kerb == "AnonymousUser":
+            return HttpResponse("Use your certificate please!")
+    else:
+        pass
     p = get_object_or_404(Poll, pk=poll_id)
+    choice_num = 1
     try:
         choice_text = request.POST['choice_num']
         choice_num = int(choice_text)
-        #kerb = request.POST['kerb']
         selected_choice = p.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the poll voting form.
@@ -61,6 +74,7 @@ def vote(request, poll_id):
             'previous_1': answer.first_choice,
             'previous_2': answer.second_choice,
             'previous_3': answer.third_choice,
+            'kerb': kerb
         }, context_instance=RequestContext(request))
     else:
         new_answer = False
@@ -97,6 +111,7 @@ def vote(request, poll_id):
                 return render_to_response('polls/detail.html', {
                     'poll': p,
                     'error_message': "Your choices match somehow. Please reselect your choices.",
+                    'kerb': kerb
                 }, context_instance=RequestContext(request))
 
             fout.close()
@@ -109,6 +124,7 @@ def vote(request, poll_id):
                     'previous_1': answer.first_choice,
                     'previous_2': answer.second_choice,
                     'previous_3': answer.third_choice,
+                    'kerb': kerb,
                 }, context_instance=RequestContext(request))
             else:
                 # go to next choice
@@ -118,12 +134,14 @@ def vote(request, poll_id):
                     'previous_1': answer.first_choice,
                     'previous_2': answer.second_choice,
                     'previous_3': answer.third_choice,
+                    'kerb': kerb,
                 }, context_instance=RequestContext(request))
         else:
             # choice num is not valid
             return render_to_response('polls/detail.html', {
                 'poll': p,
                 'error_message': "Stop messing with the form.",
+                'kerb': kerb,
             }, context_instance=RequestContext(request))
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
