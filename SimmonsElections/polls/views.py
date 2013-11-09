@@ -40,6 +40,7 @@ def index(request, **kwargs):
 def login(request):
     global importedLdap
     if importedLdap:
+        return HttpResponse("kdsfjdksjf" + str(importedLdap))
         mit.scripts_login(request)
         if str(request.user) == "AnonymousUser":
             return HttpResponse("Could not identify you by your certificate.")
