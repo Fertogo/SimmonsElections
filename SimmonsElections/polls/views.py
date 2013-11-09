@@ -24,8 +24,11 @@ except ImportError, exp:
 kerb = "cosmosd"
 
 def index(request):
+    #kerb = "mdp"
     if importedLdap:
         kerb = "rawr"
+    else:
+        kerb = "nope"
     latest_poll_list = Poll.objects.all()
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
