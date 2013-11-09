@@ -34,7 +34,7 @@ def index(request, **kwargs):
         if kerb == "AnonymousUser":
             return HttpResponse("Use your certificate please!")
     else:
-        pass
+        kerb = "localhost"
     latest_poll_list = Poll.objects.all()
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
@@ -52,7 +52,7 @@ def vote(request, poll_id):
         if kerb == "AnonymousUser":
             return HttpResponse("Use your certificate please!")
     else:
-        pass
+        kerb = "localhost"
     p = get_object_or_404(Poll, pk=poll_id)
     choice_num = 1
     try:
