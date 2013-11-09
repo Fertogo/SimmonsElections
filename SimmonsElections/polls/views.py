@@ -38,6 +38,7 @@ def index(request, **kwargs):
     return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'kerb': kerb})
 
 def login(request):
+    global importedLdap
     if importedLdap:
         mit.scripts_login(request)
         if str(request.user) == "AnonymousUser":
