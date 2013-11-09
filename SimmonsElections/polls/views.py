@@ -70,7 +70,6 @@ def vote(request, poll_id):
             answer = AnswerSet(name=kerb, question=p, active=True)
         return render_to_response('polls/detail.html', {
             'poll': p,
-            'error_message': "You didn't select a choice.",
             'previous_1': answer.first_choice,
             'previous_2': answer.second_choice,
             'previous_3': answer.third_choice,
