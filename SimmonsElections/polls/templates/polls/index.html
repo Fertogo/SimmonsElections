@@ -3,7 +3,7 @@ Hi {{ kerb }}! <br>
 Want to change who you've voted for already? Just vote again!
 {% if latest_poll_list %}
     <ul>
-    {% for poll in latest_poll_list %} <!-- /polls/{{ poll.id }}" -->
+    {% for poll in latest_poll_list %}
         <li><a href="{% url poll_vote poll.id %}">{{ poll.question }}</a> {% if poll.answer %}Answered at {{ poll.answer.created }}!{% endif %}</li>
     {% endfor %}
     </ul>
