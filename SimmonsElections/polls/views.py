@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from polls.models import Choice, Poll, AnswerSet
 from django.contrib.auth.decorators import login_required
@@ -24,7 +24,7 @@ try:
 except ImportError, exp:
     importedLdap = False
 
-@login_required
+@login_required(login_url=reverse_lazy('polls_login'))
 def index(request, **kwargs):
     kerb = str(request.user)
     latest_poll_list = Poll.objects.all()
@@ -46,7 +46,7 @@ def login(request):
         return HttpResponse("Ldap not installed. Contact simmons-nomination@mit.edu with this error please.")
     return HttpResponseRedirect(reverse('poll_list'))
     
-@login_required
+@login_required(login_url=reverse_lazy('polls_login'))
 def vote(request, poll_id):
     kerb = str(request.user)
     p = get_object_or_404(Poll, pk=poll_id)
