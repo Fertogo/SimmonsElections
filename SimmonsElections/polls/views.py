@@ -18,13 +18,13 @@ try:
     from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
     from django.http import HttpResponseRedirect
     from django.core.exceptions import ObjectDoesNotExist
-    from django.conf import settings
+    from polls import settings
     import mit
     importedLdap = True
 except ImportError, exp:
     importedLdap = False
 
-@login_required(login_url='/elections/polls/login')
+@login_required
 def index(request, **kwargs):
     kerb = str(request.user)
     latest_poll_list = Poll.objects.all()
@@ -46,7 +46,7 @@ def login(request):
         return HttpResponse("Ldap not installed. Contact simmons-nomination@mit.edu with this error please.")
     return HttpResponseRedirect(reverse('poll_list'))
     
-@login_required(login_url='/elections/polls/login')
+@login_required
 def vote(request, poll_id):
     kerb = str(request.user)
     p = get_object_or_404(Poll, pk=poll_id)
