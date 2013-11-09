@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from polls.models import Choice, Poll, AnswerSet
+from django.contrib.auth.decorators import login_required
 
 try:
     import subprocess
@@ -13,7 +14,6 @@ try:
     from django.contrib.auth.middleware import RemoteUserMiddleware
     from django.contrib.auth.backends import RemoteUserBackend
     from django.contrib.auth.views import login
-    from django.contrib.auth.decorators import login_required
     from django.contrib.auth.models import User
     from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
     from django.http import HttpResponseRedirect
