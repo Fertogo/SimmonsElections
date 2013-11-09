@@ -16,7 +16,7 @@ try:
     from django.http import HttpResponseRedirect
     from django.contrib import auth
     from django.core.exceptions import ObjectDoesNotExist
-    import settings
+    from django.conf import settings
     importedLdap = True
 except ImportError, exp:
     importedLdap = False
@@ -24,7 +24,6 @@ except ImportError, exp:
 kerb = "cosmosd"
 
 def index(request):
-    kerb = str(importedLdap)
     if importedLdap:
         kerb = "rawr"
     latest_poll_list = Poll.objects.all()
@@ -67,26 +66,37 @@ def vote(request, poll_id):
         except AnswerSet.DoesNotExist:
             answer = AnswerSet(name=kerb, question=p, active=True)
             new_answer = True
+        fout = open('../records.txt', 'a')
         if choice_num == 1 and not new_answer:
             answer.active = False
+            fout.write('Setting to false ' + answer.get_answers() + '\n')
             answer.save()
             answer = AnswerSet(name=kerb, question=p, active=True)
         valid_choices = [1, 2, 3]
         max_choice = 3
         if choice_num in valid_choices:
             if choice_num == 1:
+                fout.write('Changing answers from ' + answer.get_answers())
                 answer.first_choice = selected_choice
+                fout.write(' to ' + answer.get_answers() + '\n')
             elif choice_num == 2:
+                fout.write('Changing answers from ' + answer.get_answers())
                 answer.second_choice = selected_choice
+                fout.write(' to ' + answer.get_answers() + '\n')
             elif choice_num == 3:
+                fout.write('Changing answers from ' + answer.get_answers())
                 answer.third_choice = selected_choice
+                fout.write(' to ' + answer.get_answers() + '\n')
             
             if answer.first_choice and answer.second_choice and (answer.first_choice == answer.second_choice or (answer.third_choice and (answer.second_choice == answer.third_choice or answer.first_choice == answer.third_choice))):
+                fout.write('Abandoning ' + answer.get_answers())
+                fout.close()
                 return render_to_response('polls/detail.html', {
                     'poll': p,
                     'error_message': "Your choices match somehow. Please reselect your choices.",
                 }, context_instance=RequestContext(request))
 
+            fout.close()
             answer.save()
             if choice_num == max_choice or choice_num == len(p.choice_set.all()):
                 # done picking

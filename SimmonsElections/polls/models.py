@@ -33,3 +33,6 @@ class AnswerSet(models.Model):
     
     def __unicode__(self):
         return self.name + " answering " + str(self.question) + " at " + str(self.created)
+        
+    def get_answers(self):
+        return 'first=' + str(self.first_choice) + ', second=' + str(self.second_choice) + ', third=' + str(self.third_choice)
