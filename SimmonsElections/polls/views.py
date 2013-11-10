@@ -18,7 +18,6 @@ try:
     from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
     from django.http import HttpResponseRedirect
     from django.core.exceptions import ObjectDoesNotExist
-    from polls import settings
     import mit
     importedLdap = True
 except ImportError, exp:
@@ -39,15 +38,10 @@ def index(request, **kwargs):
 
 def login(request):
     global importedLdap
-    """
     if importedLdap:
-        return HttpResponse("kdsfjdksjf" + str(importedLdap))
-        mit.scripts_login(request)
-        if str(request.user) == "AnonymousUser":
-            return HttpResponse("Could not identify you by your certificate.")
+        return mit.scripts_login(request, template_name='polls/login_fail.html')
     else:
-        return HttpResponse("Ldap not installed. Contact simmons-nomination@mit.edu with this error please.")
-    """
+        return render_to_response('polls/login_fail.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
     return HttpResponseRedirect(reverse('poll_list'))
 
 ###
@@ -142,6 +136,7 @@ def vote(request, poll_id):
     #####
     # Abandon if invalid
     if not answer.is_valid():
+        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)        
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    error_message="Invalid ballot -- actions are logged: " +
                                    "stop messing with the form.")        
