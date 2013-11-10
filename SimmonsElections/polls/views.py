@@ -39,6 +39,7 @@ def index(request, **kwargs):
 
 def login(request):
     global importedLdap
+    """
     if importedLdap:
         return HttpResponse("kdsfjdksjf" + str(importedLdap))
         mit.scripts_login(request)
@@ -46,100 +47,112 @@ def login(request):
             return HttpResponse("Could not identify you by your certificate.")
     else:
         return HttpResponse("Ldap not installed. Contact simmons-nomination@mit.edu with this error please.")
+    """
     return HttpResponseRedirect(reverse('poll_list'))
-    
+
+###
+# Responses for various form displays
+
+def form_choice_response(request, poll, kerb, answer, next_choice_num):
+    return render_to_response('polls/detail.html', {
+        'poll': poll,
+        'answer': answer,
+        'choice_num': next_choice_num,
+        'kerb': kerb}, context_instance=RequestContext(request))
+
+def form_error_response(request, poll, kerb, answer, error_message, choice_num = 1):
+    return render_to_response('polls/detail.html', {
+        'poll': poll,
+        'answer': answer,
+        'choice_num': choice_num,
+        'error_message': error_message,
+        'kerb': kerb}, context_instance=RequestContext(request))
+
+def form_completion_response(request, poll, kerb, answer):
+    return render_to_response('polls/confirm.html', {
+        'poll': poll,
+        'answer': answer,
+        'kerb': kerb}, context_instance=RequestContext(request))    
+        
 @login_required(login_url=reverse_lazy('polls_login'))
 def vote(request, poll_id):
+    MAX_CHOICES = 3
+    
     kerb = str(request.user)
-    p = get_object_or_404(Poll, pk=poll_id)
-    choice_num = 1
-    try:
-        choice_text = request.POST['choice_num']
-        choice_num = int(choice_text)
-        selected_choice = p.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the poll voting form.
-        try:
-            if choice_num == 1:
-                answer = AnswerSet(name=kerb, question=p, active=True)
-            else:
-                answer = AnswerSet.objects.get(name=kerb, question=p, active=True)
-        except AnswerSet.DoesNotExist:
-            answer = AnswerSet(name=kerb, question=p, active=True)
-        return render_to_response('polls/detail.html', {
-            'poll': p,
-            'previous_1': answer.first_choice,
-            'previous_2': answer.second_choice,
-            'previous_3': answer.third_choice,
-            'kerb': kerb
-        }, context_instance=RequestContext(request))
-    else:
-        new_answer = False
-        try:
-            answer = AnswerSet.objects.get(name=kerb, question=p, active=True)
-        except AnswerSet.DoesNotExist:
-            answer = AnswerSet(name=kerb, question=p, active=True)
-            new_answer = True
-        fout = open('../records.txt', 'a')
-        if choice_num == 1 and not new_answer:
-            answer.active = False
-            fout.write('Setting to false ' + answer.get_answers() + '\n')
-            answer.save()
-            answer = AnswerSet(name=kerb, question=p, active=True)
-        valid_choices = [1, 2, 3]
-        max_choice = 3
-        if choice_num in valid_choices:
-            if choice_num == 1:
-                fout.write('Changing answers from ' + answer.get_answers())
-                answer.first_choice = selected_choice
-                fout.write(' to ' + answer.get_answers() + '\n')
-            elif choice_num == 2:
-                fout.write('Changing answers from ' + answer.get_answers())
-                answer.second_choice = selected_choice
-                fout.write(' to ' + answer.get_answers() + '\n')
-            elif choice_num == 3:
-                fout.write('Changing answers from ' + answer.get_answers())
-                answer.third_choice = selected_choice
-                fout.write(' to ' + answer.get_answers() + '\n')
-            
-            if answer.first_choice and answer.second_choice and (answer.first_choice == answer.second_choice or (answer.third_choice and (answer.second_choice == answer.third_choice or answer.first_choice == answer.third_choice))):
-                fout.write('Abandoning ' + answer.get_answers())
-                fout.close()
-                return render_to_response('polls/detail.html', {
-                    'poll': p,
-                    'error_message': "Your choices match somehow. Please reselect your choices.",
-                    'kerb': kerb
-                }, context_instance=RequestContext(request))
+    poll = get_object_or_404(Poll, pk=poll_id)
 
-            fout.close()
-            answer.save()
-            if choice_num == max_choice or choice_num == len(p.choice_set.all()):
-                # done picking
-                #return HttpResponseRedirect(reverse('poll_list'))
-                return render_to_response('polls/confirm.html', {
-                    'poll': p,
-                    'previous_1': answer.first_choice,
-                    'previous_2': answer.second_choice,
-                    'previous_3': answer.third_choice,
-                    'kerb': kerb,
-                }, context_instance=RequestContext(request))
-            else:
-                # go to next choice
-                return render_to_response('polls/detail.html', {
-                    'poll': p,
-                    'choice_num': str(choice_num + 1),
-                    'previous_1': answer.first_choice,
-                    'previous_2': answer.second_choice,
-                    'previous_3': answer.third_choice,
-                    'kerb': kerb,
-                }, context_instance=RequestContext(request))
-        else:
-            # choice num is not valid
-            return render_to_response('polls/detail.html', {
-                'poll': p,
-                'error_message': "Stop messing with the form.",
-                'kerb': kerb,
-            }, context_instance=RequestContext(request))
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
+    #####
+    # Get or create the answer set
+    # Allows the form to display the user's previous responses
+    (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)
+
+    #####
+    # Process and validate choice num
+    # If the user has not submitting any choices, choice_num will not be set
+    if 'choice_num' not in request.POST:
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer, next_choice_num = 1)
+    try:
+        choice_num = int(request.POST['choice_num'])
+    except:
+        # choice_num not a string
+        return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   error_message="Invalid choice_num -- actions are logged: " +
+                                   "stop messing with the form.")
+    if choice_num not in [1,2,3]:
+        # Invalid choice number
+        return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   error_message="Invalid choice_num -- actions are logged: " +
+                                   "stop messing with the form.")
+    #####
+    # Get and validate the selected choice
+    try:
+        selected_choice = poll.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # No choice corresponding to selection. Redisplay form
+        # Invalid choice number
+        return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   error_message="Invalid choice -- actions are logged: " +
+                                   "stop messing with the form.")
+
+    #####
+    # Submitting a new response for choice 1 will disable the previous submission and
+    # start a new submission
+    if choice_num == 1 and answer.nonempty():
+        answer.active = False
+        answer.save()
+        answer = AnswerSet(name=kerb, question=poll, active=True)
+
+    #####
+    # Save login information
+    
+        
+    #####
+    # Update answer fields
+    if choice_num == 1:
+        answer.first_choice = selected_choice
+    elif choice_num == 2:
+        answer.second_choice = selected_choice
+    elif choice_num == 3:
+        answer.third_choice = selected_choice
+
+    #####
+    # Save logging information
+    # TODO
+
+    #####
+    # Abandon if invalid
+    if not answer.is_valid():
+        return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   error_message="Invalid ballot -- actions are logged: " +
+                                   "stop messing with the form.")        
+    #####
+    # Save changes
+    answer.save()
+
+    ####
+    # Determine and display response
+    if choice_num == MAX_CHOICES or choice_num == len(poll.choice_set.all()):
+        return form_completion_response(request, poll=poll, kerb=kerb, answer=answer)
+    else:
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer,
+                                    next_choice_num = choice_num + 1)
