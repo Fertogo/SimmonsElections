@@ -1,12 +1,13 @@
+{% load url from future %}
 <h1>{{ poll.question }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 You have picked<br>
-1: {% if previous_1 %}{{previous_1}}{% else %}None{% endif %}<br>
-2: {% if previous_2 %}{{previous_2}}{% else %}None{% endif %}<br>
-3: {% if previous_3 %}{{previous_3}}{% else %}None{% endif %}<br>
+{% if answer.first_choice %}1. {{answer.first_choice}}<br>{% endif %}
+{% if answer.second_choice %}2. {{answer.second_choice}}<br>{% endif %}
+{% if answer.third_choice %}3. {{answer.third_choice}}<br>{% endif %}
 <br><br>
-That looks good! <a href="{% url poll_list %}">Go back to the main page.</a>
+That looks good! <a href="{% url 'poll_list' %}">Go back to the main page.</a>
 <br><br>
-I don't like that. <a href="{% url poll_vote poll.id %}">Go back to the poll!</a>
+I don't like that. <a href="{% url 'poll_vote' poll.id %}">Go back to the poll!</a>

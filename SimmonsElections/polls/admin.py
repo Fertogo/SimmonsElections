@@ -1,4 +1,4 @@
-from polls.models import Poll, Choice, AnswerSet
+from polls.models import Poll, Choice, AnswerSet, Resident
 from django.contrib import admin
 
 class ChoiceInline(admin.TabularInline):
@@ -20,3 +20,4 @@ class AnswerAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(AnswerSet)#, AnswerAdmin)
+admin.site.register(Resident)

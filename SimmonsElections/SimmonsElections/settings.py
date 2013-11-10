@@ -82,8 +82,8 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-# Overriden for production site in local_settings
-SECRET_KEY = '^=l)5@w!ggq8=e!v&amp;fy7wq3zm4(!0ba98ai9r0yb3(&amp;nqx+2=-'
+# To be included in local_settings.py
+# SECRET_KEY = '^=l)5@w!ggq8=e!v&amp;fy7wq3zm4(!0ba98ai9r0yb3(&amp;nqx+2=-'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
