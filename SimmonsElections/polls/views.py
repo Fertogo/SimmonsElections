@@ -54,7 +54,7 @@ def form_choice_response(request, poll, kerb, answer, next_choice_num):
         'choice_num': next_choice_num,
         'kerb': kerb}, context_instance=RequestContext(request))
 
-def form_error_response(request, poll, kerb, answer, error_message, choice_num = 1):
+def form_error_response(request, poll, kerb, answer, error_message, next_choice_num = 1):
     return render_to_response('polls/detail.html', {
         'poll': poll,
         'answer': answer,
@@ -105,6 +105,7 @@ def vote(request, poll_id):
         # No choice corresponding to selection. Redisplay form
         # Invalid choice number
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   next_choice_num = choice_num,                                   
                                    error_message="Invalid choice -- actions are logged: " +
                                    "stop messing with the form.")
 
@@ -138,6 +139,7 @@ def vote(request, poll_id):
     if not answer.is_valid():
         (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)        
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   next_choice_num = choice_num,
                                    error_message="Invalid ballot -- actions are logged: " +
                                    "stop messing with the form.")        
     #####
