@@ -1,5 +1,11 @@
 from django.db import models
 
+class Resident(models.Model):
+    athena = models.CharField(max_length=30, unique=True)
+
+    def __unicode__(self):
+        return self.athena
+
 class Poll(models.Model):
     question = models.CharField(max_length=200)
     
