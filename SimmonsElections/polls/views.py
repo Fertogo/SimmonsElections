@@ -44,6 +44,9 @@ def login(request):
         return render_to_response('polls/login_fail.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
     return HttpResponseRedirect(reverse('poll_list'))
 
+def login_email(request):
+    return HttpResponse('rawr')
+
 ###
 # Responses for various form displays
 

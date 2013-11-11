@@ -1,1 +1,10 @@
-{% if error_message %}{{ error_message }}{% else %}You could not be identified by your certificate. Email simmons-nominations@mit.edu if you need help.{% endif %}
+{% if error_message %}{{ error_message }}{% else %}
+You could not be identified by your certificate or you don't have certificates. If you're silly enough to not have certificates, go get a <a href="http://ist.mit.edu/certificates">MIT certificate</a>. Download the MIT CA and then get your personal certificate. If you're really silly and don't want to get a certificate, enter your email below for further instructions.<br>
+
+<form action="{% url 'polls_login_email' %}" method="post">
+{% csrf_token %}
+<input type="text" name="email" id="email" /><label for="email">Enter your Kerberos</label><br>
+<input type="submit" value="Vote" />
+</form>
+
+<br>Email simmons-nominations@mit.edu if you need help.{% endif %}
