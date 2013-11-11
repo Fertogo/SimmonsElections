@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
-from polls.models import Choice, Poll, AnswerSet
+from polls.models import Choice, Poll, AnswerSet, Resident
 from django.contrib.auth.decorators import login_required
 
 try:
