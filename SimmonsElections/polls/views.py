@@ -43,12 +43,24 @@ def index(request, **kwargs):
     return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'kerb': kerb})
 
 def login(request):
-    global importedLdap
-    if importedLdap:
-        return mit.scripts_login(request, template_name='polls/login_fail.html')
+    if 'kerberos' in request.GET and 'key' in request.GET:
+        kerb = request.GET['kerberos']
+        pw = request.GET['key']
+        user = authenticate(username=kerb, password=pw)
+        if user is not None:
+            if user.is_active:
+                return login(request, user, template_name='polls/login_fail.html')
+            else:
+                return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
+        else:
+            return HttpResponse('Invalid login. Stop trying to mess around. Your actions are being logged.')
     else:
-        return render_to_response('polls/login_fail.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
-    return HttpResponseRedirect(reverse('poll_list'))
+        global importedLdap
+        if importedLdap:
+            return mit.scripts_login(request, template_name='polls/login_fail.html')
+        else:
+            return render_to_response('polls/login_fail.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
+        return HttpResponseRedirect(reverse('poll_list'))
 
 def login_email(request):
     if 'email' not in request.POST:
@@ -59,9 +71,12 @@ def login_email(request):
     if Resident.objects.filter(athena=kerb).count() == 0:
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = random_string(20)
-    send_mail('Simmons Elections login info', 'Your kerb and password are ' + kerb + ' and ' + password, 
+    user = User.objects.get_or_create('username' = kerb)
+    user.set_password(pw)
+    user.save()
+    send_mail('Simmons Elections login info', 'Log in through this link: http://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password, 
     'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
-    return HttpResponse('Your kerb and password are ' + kerb + ' and ' + password)
+    return HttpResponse('Please check your email for futher instructions.')
     
 def random_string(length):
     return ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(length))
