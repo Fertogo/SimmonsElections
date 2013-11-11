@@ -9,7 +9,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib.auth.backends import RemoteUserBackend
-from django.contrib.auth.views import login as django_login
+from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
 from polls.models import Choice, Poll, AnswerSet, Resident
 
@@ -46,12 +46,11 @@ def login(request):
         user = authenticate(username=kerb, password=pw)
         if user is not None:
             if user.is_active:
-                django_login(request)
+                django_login(request, user)
                 return HttpResponseRedirect(reverse('poll_list'))
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
-            return HttpResponse('kerb: ' + kerb + ', pw: ' + pw)
             return HttpResponse('Invalid login. Stop trying to mess around. Your actions are being logged.')
     else:
         global importedLdap
@@ -65,7 +64,7 @@ def login_email(request):
     if 'email' not in request.POST:
         return HttpResponseRedirect(reverse('poll_list'))
     kerb = request.POST['email']
-    if kerb[-8:].lower() == "@mit.edu":
+    if kerb[-8:].lower() == '@mit.edu':
         kerb = kerb[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
@@ -73,8 +72,8 @@ def login_email(request):
     user, created = User.objects.get_or_create(username=kerb)
     user.set_password(password)
     user.save()
-    send_mail('Simmons Elections login info', 'Log in through this link: http://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password, 
-    'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
+    send_mail('Simmons Elections login info', 'To vote in the Simmons elections, log in through this link.\n\nhttp://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password + '\n\n If you need to log in again, you should go to this link again or request another link.', 
+    'simmons-nominations@mit.edu', [kerb + '@mit.edu'], fail_silently=False)
     return HttpResponse('Please check your email for futher instructions.')
 
 ###
