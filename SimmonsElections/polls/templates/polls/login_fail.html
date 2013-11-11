@@ -10,5 +10,7 @@ Kerberos, including the @mit.edu (For example, something@mit.edu)<br>
 <input type="text" name="email" id="email" /><br>
 <input type="submit" value="Send an email to me!" />
 </form>
+<br>
+{% if email_error %}{{ email_error }}{% endif %}
 
 <br>Email simmons-nominations@mit.edu if you need help.{% endif %}
