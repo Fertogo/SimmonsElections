@@ -54,10 +54,10 @@ def login_email(request):
     if kerb[-8:].lower() == "@mit.edu":
         kerb = kerb[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
-        return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'})
+        return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = random_string(20)
-    send_mail('Subject here', 'Your kerb and password are ' + kerb + ' and ' + password, 
-    'from@example.com', ['allenpark@mit.edu'], fail_silently=False)
+    send_mail('Simmons Elections login info', 'Your kerb and password are ' + kerb + ' and ' + password, 
+    'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
     return HttpResponse('Your kerb and password are ' + kerb + ' and ' + password)
     
 def random_string(length):
