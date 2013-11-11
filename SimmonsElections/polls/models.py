@@ -15,6 +15,7 @@ class Poll(models.Model):
 class Choice(models.Model):
     poll = models.ForeignKey(Poll)
     choice = models.CharField(max_length=200)
+    bio = models.TextField()
     
     def num_first_selected(self):
         return len(AnswerSet.objects.filter(first_choice=self, active=True))
