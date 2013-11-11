@@ -46,7 +46,7 @@ def login(request):
         user = authenticate(username=kerb, password=pw)
         if user is not None:
             if user.is_active:
-                return django_login(request, user)
+                return django_login(request, template_name='polls/login_fail.html')
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
