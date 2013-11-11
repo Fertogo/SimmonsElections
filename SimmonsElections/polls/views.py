@@ -34,7 +34,7 @@ except ImportError, exp:
 def index(request, **kwargs):
     kerb = str(request.user)
     kerb_obscured = obscure_str(request.user)
-    latest_poll_list = Poll.objects.all()
+    latest_poll_list = Poll.objects.all().order_by('question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
         try:
