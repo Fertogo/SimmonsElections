@@ -12,6 +12,8 @@ try:
     from django.core.exceptions import ObjectDoesNotExist
     from django.conf import settings
 
+    from polls.models import Resident
+
     def zephyr(msg, clas='message', instance='log', rcpt='nobody',):
         proc = subprocess.Popen(
             ['zwrite', '-d', '-n', '-c', clas, '-i', instance, rcpt, ],
@@ -30,6 +32,13 @@ try:
                 return name
             else:
                 return username
+
+        def authenticate(self, remote_user):
+            user = RemoteUserBackend.authenticate(self, remote_user)
+            if Resident.objects.filter(athena=user.username).count() == 0:
+                return None
+            return user
+            
         def configure_user(self, user, ):
             username = user.username
             user.password = "ScriptsSSLAuth"
