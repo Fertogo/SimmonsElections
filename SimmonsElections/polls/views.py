@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from polls.models import Choice, Poll, AnswerSet, Resident
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 import string
 import random
 
@@ -49,14 +50,15 @@ def login(request):
 def login_email(request):
     if 'email' not in request.POST:
         return HttpResponseRedirect(reverse('poll_list'))
-    email = request.POST['email']
-    if email[-8:] != "@mit.edu":
-        return render_to_response('polls/login_fail.html', {'email_error': 'Please enter something ending with "@mit.edu"'})
-    kerb = email[:-8]
+    kerb = request.POST['email']
+    if kerb[-8:].lower() == "@mit.edu":
+        kerb = email[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
-        return render_to_response('polls/login_fail.html', {'email_error': 'That\'s not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'})
+        return render_to_response('polls/login_fail.html', {'email_error': kerb ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'})
     password = random_string(20)
-    return HttpResponse("Your kerb and password are " + kerb + " and " + password)
+    send_mail('Subject here', 'Your kerb and password are ' + kerb + ' and ' + password, 
+    'from@example.com', ['allenpark@mit.edu'], fail_silently=False)
+    return HttpResponse('Your kerb and password are ' + kerb + ' and ' + password)
     
 def random_string(length):
     return ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(length))
