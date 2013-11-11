@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^login', 'polls.views.login', name='polls_login'),
     url(r'^(?P<poll_id>\d+)/$', 'polls.views.vote',
         name='poll_vote'),
+    url(r'^login_email', 'polls.views.login_email', name='polls_login_email'),
 )
