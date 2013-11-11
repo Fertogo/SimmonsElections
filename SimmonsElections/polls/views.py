@@ -71,7 +71,7 @@ def login_email(request):
     if Resident.objects.filter(athena=kerb).count() == 0:
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = random_string(20)
-    user = User.objects.get_or_create(username=kerb)
+    user, created = User.objects.get_or_create(username=kerb)
     user.set_password(pw)
     user.save()
     send_mail('Simmons Elections login info', 'Log in through this link: http://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password, 
