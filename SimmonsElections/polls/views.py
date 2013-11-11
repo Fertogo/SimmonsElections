@@ -2,8 +2,11 @@ from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
-from polls.models import Choice, Poll, AnswerSet
+from polls.models import Choice, Poll, AnswerSet, Resident
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+import string
+import random
 
 import logging
 logger = logging.getLogger(__name__)
@@ -46,6 +49,22 @@ def login(request):
     else:
         return render_to_response('polls/login_fail.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
     return HttpResponseRedirect(reverse('poll_list'))
+
+def login_email(request):
+    if 'email' not in request.POST:
+        return HttpResponseRedirect(reverse('poll_list'))
+    kerb = request.POST['email']
+    if kerb[-8:].lower() == "@mit.edu":
+        kerb = kerb[:-8]
+    if Resident.objects.filter(athena=kerb).count() == 0:
+        return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
+    password = random_string(20)
+    send_mail('Simmons Elections login info', 'Your kerb and password are ' + kerb + ' and ' + password, 
+    'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
+    return HttpResponse('Your kerb and password are ' + kerb + ' and ' + password)
+    
+def random_string(length):
+    return ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(length))
 
 ###
 # Responses for various form displays
