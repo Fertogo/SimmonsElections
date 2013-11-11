@@ -45,7 +45,8 @@ def login(request):
     return HttpResponseRedirect(reverse('poll_list'))
 
 def login_email(request):
-    return HttpResponse('rawr')
+    rawr = request.POST['email']
+    return HttpResponse(rawr)
 
 ###
 # Responses for various form displays
