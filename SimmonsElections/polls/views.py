@@ -19,7 +19,7 @@ try:
     from django.contrib import auth
     from django.contrib.auth.middleware import RemoteUserMiddleware
     from django.contrib.auth.backends import RemoteUserBackend
-    from django.contrib.auth.views import login
+    from django.contrib.auth.views import login as django_login
     from django.contrib.auth.models import User
     from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
     from django.http import HttpResponseRedirect
@@ -49,7 +49,7 @@ def login(request):
         user = authenticate(username=kerb, password=pw)
         if user is not None:
             if user.is_active:
-                return login(request, user, template_name='polls/login_fail.html')
+                return django_login(request, user, template_name='polls/login_fail.html')
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
