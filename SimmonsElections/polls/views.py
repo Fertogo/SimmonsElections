@@ -2,12 +2,17 @@ from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
-from polls.models import Choice, Poll, AnswerSet, Resident
-from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-import string
-import random
-import hashlib
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import auth
+from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.middleware import RemoteUserMiddleware
+from django.contrib.auth.backends import RemoteUserBackend
+from django.contrib.auth import login as django_login
+from django.contrib.auth.models import User
+from polls.models import Choice, Poll, AnswerSet, Resident
+
 from obscure import obscure_str
 
 import logging
@@ -18,14 +23,6 @@ try:
     import ldap
     import ldap.filter
 
-    from django.contrib import auth
-    from django.contrib.auth.middleware import RemoteUserMiddleware
-    from django.contrib.auth.backends import RemoteUserBackend
-    from django.contrib.auth.views import login as django_login
-    from django.contrib.auth.models import User
-    from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
-    from django.http import HttpResponseRedirect
-    from django.core.exceptions import ObjectDoesNotExist
     import mit
     importedLdap = True
 except ImportError, exp:
@@ -47,16 +44,16 @@ def index(request, **kwargs):
 
 def login(request):
     if 'kerberos' in request.GET and 'key' in request.GET:
-        kerb = request.GET['kerberos']
-        pw = request.GET['key']
+        kerb = str(request.GET['kerberos'])
+        pw = str(request.GET['key'])
         user = authenticate(username=kerb, password=pw)
         if user is not None:
             if user.is_active:
-                return django_login(request, user, template_name='polls/login_fail.html')
+                django_login(request, user)
+                return HttpResponseRedirect(reverse('poll_list'))
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
-            return HttpResponse('kerb: ' + kerb + ', pw: ' + pw)
             return HttpResponse('Invalid login. Stop trying to mess around. Your actions are being logged.')
     else:
         global importedLdap
@@ -70,20 +67,17 @@ def login_email(request):
     if 'email' not in request.POST:
         return HttpResponseRedirect(reverse('poll_list'))
     kerb = request.POST['email']
-    if kerb[-8:].lower() == "@mit.edu":
+    if kerb[-8:].lower() == '@mit.edu':
         kerb = kerb[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
-    password = random_string(20)
+    password = User.objects.make_random_password(length=20)
     user, created = User.objects.get_or_create(username=kerb)
     user.set_password(password)
     user.save()
-    send_mail('Simmons Elections login info', 'Log in through this link: http://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password, 
-    'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
+    send_mail('Simmons Elections login info', 'To vote in the Simmons elections, log in through this link.\n\nhttp://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password + '\n\n If you need to log in again, you should go to this link again or request another link.', 
+    'simmons-nominations@mit.edu', [kerb + '@mit.edu'], fail_silently=False)
     return HttpResponse('Please check your email for futher instructions.')
-    
-def random_string(length):
-    return ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(length))
 
 ###
 # Responses for various form displays
