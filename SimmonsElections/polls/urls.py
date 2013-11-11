@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import DetailView, ListView
-from polls.models import Poll
+from polls.models import Poll, AnswerSet
 
 urlpatterns = patterns('',
     url(r'^$', 'polls.views.index', name='poll_list'),

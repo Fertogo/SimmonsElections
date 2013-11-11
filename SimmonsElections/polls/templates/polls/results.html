@@ -1,7 +1,7 @@
 {% if answerset_list %}
     <ul>
     {% for answerset in answerset_list %}
-        {{ answerset }}
+        {{ answerset.get_answers }}
     {% endfor %}
     </ul>
 {% else %}
