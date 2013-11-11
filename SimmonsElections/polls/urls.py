@@ -6,7 +6,7 @@ urlpatterns = patterns('',
     url(r'^$', 'polls.views.index', name='poll_list'),
     url(r'^results/$',
         ListView.as_view(
-            queryset=AnswerSet.objects.all(),
+            queryset=AnswerSet.objects.all().filter(active=True),
             context_object_name='answerset_list',
             template_name='polls/results.html'),
         name='poll_results'),
