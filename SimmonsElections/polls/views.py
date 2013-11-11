@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from polls.models import Choice, Poll, AnswerSet, Resident
 from django.contrib.auth.decorators import login_required
+import string
+import random
 
 try:
     import subprocess
