@@ -12,6 +12,7 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
 from polls.models import Choice, Poll, AnswerSet, Resident
+from mit import ScriptsRemoteUserBackend
 
 from obscure import obscure_str
 import json
@@ -41,7 +42,7 @@ def index(request, **kwargs):
             poll.answer = answer_to_poll
         except (AnswerSet.DoesNotExist):
             poll.answer = None
-    return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'kerb': kerb})
+    return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'user': request.user})
 
 def login(request):
     if 'kerberos' in request.GET and 'key' in request.GET:
@@ -74,6 +75,8 @@ def login_email(request):
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = User.objects.make_random_password(length=20)
     user, created = User.objects.get_or_create(username=kerb)
+    scripts_remote_backend = ScriptsRemoteUserBackend()
+    scripts_remote_backend.configure_user(user)
     user.set_password(password)
     user.save()
     send_mail('Simmons Elections login info', 'To vote in the Simmons elections, log in through this link.\n\nhttp://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password + '\n\n If you need to log in again, you should go to this link again or request another link.', 
