@@ -141,6 +141,15 @@ INSTALLED_APPS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+            'datefmt' : '%d/%b/%Y %H:%M:%S'
+        },
+        'simple' : {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -149,15 +158,47 @@ LOGGING = {
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
+            'filters': [],#['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'mail_admins_warn': {
+            'level': 'WARN',
+            'filters': [],#['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'warn_file': {
+            'level': 'WARN',
+            'class': 'logging.FileHandler',
+            'filename': 'warn_actions.log',
+            'formatter': 'verbose',
+        },
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'actions.log',
+            'formatter': 'verbose',
+        },
+        'django_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django_errors.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'django': {
+            'handlers':['django_file'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'polls': {
+            'handlers': ['debug_file', 'warn_file', 'mail_admins'],
+            'level': 'DEBUG',
         },
     }
 }

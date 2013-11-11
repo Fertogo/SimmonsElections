@@ -5,6 +5,9 @@ from django.template import RequestContext
 from polls.models import Choice, Poll, AnswerSet
 from django.contrib.auth.decorators import login_required
 
+import logging
+logger = logging.getLogger(__name__)
+
 try:
     import subprocess
     import ldap
@@ -48,6 +51,7 @@ def login(request):
 # Responses for various form displays
 
 def form_choice_response(request, poll, kerb, answer, next_choice_num):
+    logger.debug(kerb + " - Displaying form - " + poll.question + " - choice " + str(next_choice_num))
     return render_to_response('polls/detail.html', {
         'poll': poll,
         'answer': answer,
@@ -58,11 +62,12 @@ def form_error_response(request, poll, kerb, answer, error_message, next_choice_
     return render_to_response('polls/detail.html', {
         'poll': poll,
         'answer': answer,
-        'choice_num': choice_num,
+        'choice_num': next_choice_num,
         'error_message': error_message,
         'kerb': kerb}, context_instance=RequestContext(request))
 
 def form_completion_response(request, poll, kerb, answer):
+    logger.debug(kerb + " - Displaying form completion - " + poll.question)
     return render_to_response('polls/confirm.html', {
         'poll': poll,
         'answer': answer,
@@ -89,11 +94,13 @@ def vote(request, poll_id):
         choice_num = int(request.POST['choice_num'])
     except:
         # choice_num not a string
+        logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    error_message="Invalid choice_num -- actions are logged: " +
                                    "stop messing with the form.")
     if choice_num not in [1,2,3]:
         # Invalid choice number
+        logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])        
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    error_message="Invalid choice_num -- actions are logged: " +
                                    "stop messing with the form.")
@@ -104,6 +111,7 @@ def vote(request, poll_id):
     except (KeyError, Choice.DoesNotExist):
         # No choice corresponding to selection. Redisplay form
         # Invalid choice number
+        logger.warn(kerb + " - Invalid choice - " + poll.question + ": " + request.POST['choice'])                
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    next_choice_num = choice_num,                                   
                                    error_message="Invalid choice -- actions are logged: " +
@@ -118,10 +126,6 @@ def vote(request, poll_id):
         answer = AnswerSet(name=kerb, question=poll, active=True)
 
     #####
-    # Save login information
-    
-        
-    #####
     # Update answer fields
     if choice_num == 1:
         answer.first_choice = selected_choice
@@ -131,17 +135,20 @@ def vote(request, poll_id):
         answer.third_choice = selected_choice
 
     #####
-    # Save logging information
-    # TODO
-
-    #####
     # Abandon if invalid
     if not answer.is_valid():
-        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)        
+        logger.warn(kerb + " - Invalid ballot - " + poll.question + ": " + str(answer.signature()))
+        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    next_choice_num = choice_num,
                                    error_message="Invalid ballot -- actions are logged: " +
-                                   "stop messing with the form.")        
+                                   "stop messing with the form.")
+    
+    #####
+    # Save logging information
+    # TODO
+    logger.debug(kerb + " - Saving ballot - " + poll.question + ": " + str(answer.signature()))
+        
     #####
     # Save changes
     answer.save()

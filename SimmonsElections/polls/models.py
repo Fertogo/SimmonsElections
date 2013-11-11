@@ -73,5 +73,36 @@ class AnswerSet(models.Model):
             unique_choices.add(choice)
         return True
 
+    def signature(self):
+        ####
+        # Generats a 'signature' of the ballot -- replaces each choice
+        # with a letter A, B, C. Used to debug invalid ballot submissions
+        # [A, B, C], [A, B, None], or [A, None, None] are valid ballots
+        # [A, A, B], [A, None, C], etc. are invalid ballots
+        out = []
+        if self.first_choice == None:
+            out.append(None)
+        else:
+            out.append("A")
+            
+        if self.second_choice == None:
+            out.append(None)
+        elif self.second_choice == self.first_choice:
+            out.append("A")
+        else:
+            out.append("B")
+            
+        if self.third_choice == None:
+            out.append(None)
+        elif self.third_choice == self.first_choice:
+            out.append("A")
+        elif self.third_choice == self.second_choice:
+            out.append("B")
+        else:
+            out.append("C")
+        return out
+
+        
+
                 
         
