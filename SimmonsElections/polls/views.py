@@ -216,3 +216,12 @@ def results(request):
         response_data[question].append(ballot)
     return HttpResponse(json.dumps(response_data, sort_keys=True, indent=4),
                         content_type="application/json")
+def election_index(request):
+    return render_to_response('polls/elections-index.html')
+
+def election_index_redirect(request):
+        return HttpResponseRedirect(reverse('election_index'))
+
+def polls_index_redirect(request):
+        return HttpResponseRedirect(reverse('poll_list'))    
+
