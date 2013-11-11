@@ -9,8 +9,11 @@ Pick your {% if choice_num %}{{ choice_num }}{% else %}1{% endif %} choice.
 <form action="{% url 'poll_vote' poll.id %}" method="post">
 {% csrf_token %}
 {% for choice in poll.choice_set.all %}
+<div>
     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="this.form.submit()" {% if choice_num != 1 %}{% if choice == answer.first_choice or choice == answer.second_choice or choice == answer.third_choice %}disabled{% endif %}{% endif %}/>
-    <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
+    <label for="choice{{ forloop.counter }}"><b>{{ choice.choice }}</b></label><br />
+    <div style='margin-left:50px'>{{ choice.bio }}</div>
+    </div>
 {% endfor %}
 <input type="hidden" name="choice_num" value="{% if choice_num %}{{ choice_num }}{% else %}1{% endif %}">
 <input type="hidden" name="kerb" value="merp">
