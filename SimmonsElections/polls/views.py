@@ -45,8 +45,19 @@ def login(request):
     return HttpResponseRedirect(reverse('poll_list'))
 
 def login_email(request):
-    rawr = request.POST['email']
-    return HttpResponse(rawr)
+    if 'email' not in request.POST:
+        return HttpResponseRedirect(reverse('poll_list'))
+    email = request.POST['email']
+    if email[-8:] != "@mit.edu":
+        return render_to_response('polls/login_fail.html', {'email_error': 'Please enter something ending with "@mit.edu"'})
+    kerb = email[:-8]
+    if Resident.objects.filter(athena=kerb).count() == 0:
+        return render_to_response('polls/login_fail.html', {'email_error': 'That\'s not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'})
+    password = random_string(20)
+    return HttpResponse("Your kerb and password are " + kerb + " and " + password)
+    
+def random_string(length):
+    return ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(length))
 
 ###
 # Responses for various form displays
