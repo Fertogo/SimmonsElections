@@ -2,9 +2,16 @@ from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
-from polls.models import Choice, Poll, AnswerSet, Resident
-from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import auth
+from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.middleware import RemoteUserMiddleware
+from django.contrib.auth.backends import RemoteUserBackend
+from django.contrib.auth.views import login as django_login
+from django.contrib.auth.models import User
+from polls.models import Choice, Poll, AnswerSet, Resident
 import string
 import random
 
@@ -16,14 +23,6 @@ try:
     import ldap
     import ldap.filter
 
-    from django.contrib import auth
-    from django.contrib.auth.middleware import RemoteUserMiddleware
-    from django.contrib.auth.backends import RemoteUserBackend
-    from django.contrib.auth.views import login as django_login
-    from django.contrib.auth.models import User
-    from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
-    from django.http import HttpResponseRedirect
-    from django.core.exceptions import ObjectDoesNotExist
     import mit
     importedLdap = True
 except ImportError, exp:
@@ -44,8 +43,8 @@ def index(request, **kwargs):
 
 def login(request):
     if 'kerberos' in request.GET and 'key' in request.GET:
-        kerb = request.GET['kerberos']
-        pw = request.GET['key']
+        kerb = str(request.GET['kerberos'])
+        pw = str(request.GET['key'])
         user = authenticate(username=kerb, password=pw)
         if user is not None:
             if user.is_active:
