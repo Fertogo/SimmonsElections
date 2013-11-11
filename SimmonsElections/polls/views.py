@@ -53,6 +53,7 @@ def login(request):
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
+            return HttpResponse('kerb: ' + kerb + ', pw: ' + pw)
             return HttpResponse('Invalid login. Stop trying to mess around. Your actions are being logged.')
     else:
         global importedLdap
