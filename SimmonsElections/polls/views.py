@@ -12,8 +12,6 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth.views import login as django_login
 from django.contrib.auth.models import User
 from polls.models import Choice, Poll, AnswerSet, Resident
-import string
-import random
 
 import logging
 logger = logging.getLogger(__name__)
@@ -70,16 +68,13 @@ def login_email(request):
         kerb = kerb[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
-    password = random_string(20)
+    password = User.objects.make_random_password(length=20)
     user, created = User.objects.get_or_create(username=kerb)
     user.set_password(password)
     user.save()
     send_mail('Simmons Elections login info', 'Log in through this link: http://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password, 
     'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
     return HttpResponse('Please check your email for futher instructions.')
-    
-def random_string(length):
-    return ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(length))
 
 ###
 # Responses for various form displays
