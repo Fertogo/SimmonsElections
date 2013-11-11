@@ -1,4 +1,5 @@
 from django.db import models
+from obscure import unobscure_str
 
 class Resident(models.Model):
     athena = models.CharField(max_length=30, unique=True)
@@ -39,7 +40,7 @@ class AnswerSet(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return self.name + " answering " + str(self.question) + " at " + str(self.created)
+        return self.name + " (" + unobscure_str(self.name) + ") " + " answering " + str(self.question) + " at " + str(self.created)
         
     def get_answers(self):
         return 'first=' + str(self.first_choice) + ', second=' + str(self.second_choice) + ', third=' + str(self.third_choice)

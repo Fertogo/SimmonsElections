@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 import string
 import random
+import hashlib
+from obscure import obscure_str
 
 import logging
 logger = logging.getLogger(__name__)
@@ -32,11 +34,12 @@ except ImportError, exp:
 @login_required(login_url=reverse_lazy('polls_login'))
 def index(request, **kwargs):
     kerb = str(request.user)
+    kerb_obscured = obscure_str(request.user)
     latest_poll_list = Poll.objects.all()
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
         try:
-            answer_to_poll = answers_so_far.get(question=poll.id, name=kerb, active=True)
+            answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
             poll.answer = answer_to_poll
         except (AnswerSet.DoesNotExist):
             poll.answer = None
@@ -113,12 +116,13 @@ def vote(request, poll_id):
     MAX_CHOICES = 3
     
     kerb = str(request.user)
+    kerb_obscured = obscure_str(request.user)
     poll = get_object_or_404(Poll, pk=poll_id)
 
     #####
     # Get or create the answer set
     # Allows the form to display the user's previous responses
-    (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)
+    (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb_obscured, question=poll, active=True)
 
     #####
     # Process and validate choice num
@@ -158,7 +162,7 @@ def vote(request, poll_id):
     if choice_num == 1 and answer.nonempty():
         answer.active = False
         answer.save()
-        answer = AnswerSet(name=kerb, question=poll, active=True)
+        answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
 
     #####
     # Update answer fields
@@ -173,7 +177,7 @@ def vote(request, poll_id):
     # Abandon if invalid
     if not answer.is_valid():
         logger.warn(kerb + " - Invalid ballot - " + poll.question + ": " + str(answer.signature()))
-        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb, question=poll, active=True)
+        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb_obscured, question=poll, active=True)
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    next_choice_num = choice_num,
                                    error_message="Invalid ballot -- actions are logged: " +
