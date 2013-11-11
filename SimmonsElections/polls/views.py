@@ -72,7 +72,7 @@ def login_email(request):
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = random_string(20)
     user, created = User.objects.get_or_create(username=kerb)
-    user.set_password(pw)
+    user.set_password(password)
     user.save()
     send_mail('Simmons Elections login info', 'Log in through this link: http://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password, 
     'simmons-nominations@mit.edu', ['allenpark@mit.edu'], fail_silently=False)
