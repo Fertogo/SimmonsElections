@@ -47,7 +47,6 @@ class AnswerSet(models.Model):
 
     def nonempty(self):
         return self.first_choice != None
-        
 
     def get_choice(self, i):
         if i == 1:
