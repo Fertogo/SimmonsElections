@@ -52,7 +52,7 @@ def login_email(request):
         return HttpResponseRedirect(reverse('poll_list'))
     kerb = request.POST['email']
     if kerb[-8:].lower() == "@mit.edu":
-        kerb = email[:-8]
+        kerb = kerb[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'})
     password = random_string(20)
