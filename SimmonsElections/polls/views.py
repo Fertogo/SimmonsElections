@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from polls.models import Choice, Poll, AnswerSet, Resident
 
 from obscure import obscure_str
+import json
 
 import logging
 logger = logging.getLogger(__name__)
@@ -193,3 +194,25 @@ def vote(request, poll_id):
     else:
         return form_choice_response(request, poll=poll, kerb=kerb, answer=answer,
                                     next_choice_num = choice_num + 1)
+
+def results(request):
+    kerb = str(request.user)
+    if kerb not in ['larsj', 'apark93']:
+        raise Http404
+    logger.debug(kerb + " - Displaying results")
+    response_data = {}
+    answers = AnswerSet.objects.filter(active=True)
+    for answer in answers:
+        if not answer.nonempty():
+            continue
+        question = answer.question.question
+        if question not in response_data:
+            response_data[question] = []
+        ballot = {}
+        ballot['name'] = answer.name
+        ballot['choices'] = [str(answer.first_choice),
+                             str(answer.second_choice),
+                             str(answer.third_choice)]
+        response_data[question].append(ballot)
+    return HttpResponse(json.dumps(response_data, sort_keys=True, indent=4),
+                        content_type="application/json")

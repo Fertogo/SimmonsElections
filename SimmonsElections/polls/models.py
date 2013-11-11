@@ -56,7 +56,7 @@ class AnswerSet(models.Model):
         elif i == 3:
             return self.third_choice
         else:
-            raise ValueError("i in get_choice must be in [1,3]")
+            raise ValueError("i in get_choice must be in [1,3]")                
 
     def is_valid(self):
         if self.get_choice(3) and not self.get_choice(2):
