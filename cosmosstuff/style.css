@@ -27,6 +27,10 @@ body {
   font-size: 14px;
   color: #444444;
 }
+a {
+  text-decoration: none;
+  color: #444444;
+}
 .horizontal-region {
   position: relative;
   width: 100%;
@@ -87,7 +91,7 @@ body {
 .tile {
   position: relative;
   width: 268px;
-  height: 268px;
+  height: 200px;
   display: inline-table;
   background-color: #ffffff;
   border: solid 1px #eeeeee;
@@ -131,13 +135,13 @@ body {
   opacity: 1.0;
 }
 .tile.voted .option.rank1 .circle {
-  background-color: #0b9444;
+  background-color: #22eb3a;
 }
 .tile.voted .option.rank2 .circle {
-  background-color: #9bee00;
+  background-color: #b5eb22;
 }
 .tile.voted .option.rank3 .circle {
-  background-color: #ffde16;
+  background-color: #ebe922;
 }
 .tile.voted .btn {
   background-color: #eeeeee;
@@ -171,4 +175,133 @@ body {
 }
 .btn:hover {
   opacity: 0.7;
+}
+.section {
+  position: relative;
+  display: block;
+  background-color: #ffffff;
+  border: solid 1px #eeeeee;
+  padding: 20px 20px 30px 20px;
+  margin: 0px 6px 12px 0px;
+}
+.section .title {
+  font-size: 40px;
+  color: #bbb;
+  font-weight: 300;
+  margin: 0px 0px 20px 20px;
+}
+.section .name {
+  margin-left: 20px;
+  margin-top: 20px;
+  font-size: 17px;
+  color: #444444;
+}
+.section .blurb {
+  margin-left: 40px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #777777;
+}
+.section.choosing1 .poll-option:hover {
+  background-color: #22eb3a;
+}
+.section.choosing2 .poll-option:hover {
+  background-color: #b5eb22;
+}
+.section.choosing3 .poll-option:hover {
+  background-color: #ebe922;
+}
+.btn-back {
+  display: inline-block;
+  position: relative;
+  height: 20px;
+  width: 120px;
+  padding: 10px 0px;
+  margin-bottom: 20px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 1.0;
+  background-color: #eeeeee;
+  transition: opacity 0.2s;
+}
+.btn-back:hover {
+  opacity: 0.7;
+}
+.poll-option {
+  display: block;
+  margin: 0px;
+  padding: 10px 40px;
+  background-color: #ffffff;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+.poll-option.rank1 {
+  background-color: #22eb3a !important;
+}
+.poll-option.rank1 .circle {
+  opacity: 1.0;
+}
+.poll-option.rank2 {
+  background-color: #b5eb22 !important;
+}
+.poll-option.rank2 .circle {
+  opacity: 1.0;
+}
+.poll-option.rank3 {
+  background-color: #ebe922 !important;
+}
+.poll-option.rank3 .circle {
+  opacity: 1.0;
+}
+.instruction {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+.btn-edit {
+  display: inline-block;
+  position: relative;
+  height: 20px;
+  width: 120px;
+  padding: 10px 0px;
+  margin-top: 20px;
+  margin-left: 20px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 1.0;
+  background-color: #eeeeee;
+  transition: opacity 0.2s;
+}
+.btn-edit:hover {
+  opacity: 0.7;
+}
+.btn-done {
+  display: inline-block;
+  position: relative;
+  height: 20px;
+  width: 120px;
+  padding: 10px 0px;
+  margin-top: 20px;
+  margin-left: 624px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 1.0;
+  color: #ffffff;
+  background-color: #25aae1;
+  transition: opacity 0.2s;
+}
+.btn-done:hover {
+  opacity: 0.7;
+}
+.circle {
+  display: inline-block;
+  position: relative;
+  opacity: 0.0;
+  left: -20px;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 20px;
+  background-color: #ffffff;
 }
