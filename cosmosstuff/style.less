@@ -126,6 +126,11 @@ a {
   top: 32px; left: 835px;
   width: 120px;
   text-align: right;
+  color: @gray;
+  b {
+    font-weight: 700;
+    color: @baseFontColor;
+  }
 }
 
 .helper-txt {
@@ -223,7 +228,7 @@ a {
   margin: 0px 6px 12px 0px;
   .title {
     font-size: 40px;
-    color: #bbb;
+    color: @gray;
     font-weight: 300;
     margin: 0px 0px 20px 20px;
   }
@@ -242,7 +247,7 @@ a {
   &.choosing1 { .poll-option { &:hover { background-color: @rank1; } } }
   &.choosing2 { .poll-option { &:hover { background-color: @rank2; } } }
   &.choosing3 { .poll-option { &:hover { background-color: @rank3; } } }
-  &.choosing4 { .poll-option { cursor: auto !important; } }
+  &.choosing4 { .poll-option { cursor: default !important; } }
 }
 
 .poll-option {
@@ -250,7 +255,7 @@ a {
   width: 200px;
   padding: 10px 40px;
   border-radius: 3px;
-  margin: 0px;
+  margin-left: 20px;
   background-color: @white;
   transition: background-color 0.2s;
   cursor: pointer;
@@ -260,9 +265,9 @@ a {
     }
   }
   // TODO Find less desperate solution than this...
-  &.rank1 { background-color: @rank1 !important; cursor: auto !important; }
-  &.rank2 { background-color: @rank2 !important; cursor: auto !important; }
-  &.rank3 { background-color: @rank3 !important; cursor: auto !important; }
+  &.rank1 { background-color: @rank1 !important; cursor: default !important; }
+  &.rank2 { background-color: @rank2 !important; cursor: default !important; }
+  &.rank3 { background-color: @rank3 !important; cursor: default !important; }
 }
 
 .instruction {
