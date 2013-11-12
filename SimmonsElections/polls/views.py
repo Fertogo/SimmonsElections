@@ -56,7 +56,8 @@ def login(request):
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
-            return HttpResponse('Invalid login. Stop trying to mess around. Your actions are being logged.')
+            logger.debug(kerb + " - Invalid pw key: " + pw)
+            return HttpResponse('Invalid login -- actions are logged. Be aware that only the most recent link works for email-based login.')
     else:
         global importedLdap
         if importedLdap:
@@ -81,7 +82,7 @@ def login_email(request):
     user.save()
     send_mail('Simmons Elections login info', 'To vote in the Simmons elections, log in through this link.\n\nhttp://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password + '\n\n If you need to log in again, you should go to this link again or request another link.', 
     'simmons-nominations@mit.edu', [kerb + '@mit.edu'], fail_silently=False)
-    return HttpResponse('Please check your email for futher instructions.')
+    return HttpResponse('Please check your email for futher voting instructions. You may close this window.')
 
 ###
 # Responses for various form displays
