@@ -27,6 +27,7 @@ body {
   font-weight: 400;
   font-size: 14px;
   color: #444444;
+  background-color: #f7f7f7;
 }
 a {
   text-decoration: none;
@@ -52,6 +53,9 @@ a {
   width: 960px;
   margin-left: auto;
   margin-right: auto;
+}
+.red {
+  color: #bf1e2e;
 }
 /***************************************
 *              COMPONENTS              *
@@ -234,6 +238,9 @@ a {
 .section.choosing3 .poll-option:hover {
   background-color: #ebe922;
 }
+.section.choosing4 .poll-option {
+  cursor: auto !important;
+}
 .poll-option {
   display: block;
   width: 200px;
@@ -251,12 +258,15 @@ a {
 }
 .poll-option.rank1 {
   background-color: #22eb3a !important;
+  cursor: auto !important;
 }
 .poll-option.rank2 {
   background-color: #b5eb22 !important;
+  cursor: auto !important;
 }
 .poll-option.rank3 {
   background-color: #ebe922 !important;
+  cursor: auto !important;
 }
 .instruction {
   margin-left: 20px;

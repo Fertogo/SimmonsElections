@@ -128,7 +128,7 @@ def form_choice_response(request, poll, kerb, answer, next_choice_num):
         'next_choice_num': next_choice_num,
         'kerb': kerb}, context_instance=RequestContext(request))
 
-def form_error_response(request, poll, kerb, answer, error_message, next_choice_num = 1):
+def form_error_response(request, poll, kerb, answer, error_message, next_choice_num = 4):
     return render_to_response('polls/poll.html', {
         'poll': poll,
         'candidates' : get_candidates_and_rank(poll, answer),
@@ -181,12 +181,13 @@ def vote(request, poll_id):
         logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])        
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    error_message="Invalid choice_num -- actions are logged: " +
-                                   "stop messing with the form.")
+                                   "stop messing with the form.",
+                                   next_choice_num = 4)
     #####
     # Get and validate the selected choice
     try:
         selected_choice = poll.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
+    except (KeyError, Choice.DoesNotExist, ValueError):
         # No choice corresponding to selection. Redisplay form
         # Invalid choice number
         logger.warn(kerb + " - Invalid choice - " + poll.question + ": " + request.POST['choice'])                
