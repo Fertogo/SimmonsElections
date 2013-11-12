@@ -39,7 +39,10 @@ def index(request, **kwargs):
     for poll in latest_poll_list:
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
-            poll.answer = answer_to_poll
+            if answer_to_poll.nonempty():
+                poll.answer = answer_to_poll
+            else:
+                poll.answer = None
         except (AnswerSet.DoesNotExist):
             poll.answer = None
     return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'user': request.user})
@@ -91,6 +94,7 @@ def form_choice_response(request, poll, kerb, answer, next_choice_num):
     logger.debug(kerb + " - Displaying form - " + poll.question + " - choice " + str(next_choice_num))
     return render_to_response('polls/detail.html', {
         'poll': poll,
+        'candidates' : poll.choice_set.order_by('choice'),
         'answer': answer,
         'choice_num': next_choice_num,
         'kerb': kerb}, context_instance=RequestContext(request))
@@ -98,6 +102,7 @@ def form_choice_response(request, poll, kerb, answer, next_choice_num):
 def form_error_response(request, poll, kerb, answer, error_message, next_choice_num = 1):
     return render_to_response('polls/detail.html', {
         'poll': poll,
+        'candidates' : poll.choice_set.order_by('choice'),        
         'answer': answer,
         'choice_num': next_choice_num,
         'error_message': error_message,

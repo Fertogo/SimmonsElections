@@ -3,7 +3,6 @@
 <p>Hi {{ user.first_name }} ({{user.username}})! </p>
 <p>Polls will close on *** at ***pm.  </p>
 <p>Select a position below to vote: </p>
-Want to change who you've voted for already? Just vote again!
 {% if latest_poll_list %}
     <ul>
     {% for poll in latest_poll_list %} <!-- /polls/{{ poll.id }}" -->
@@ -13,3 +12,4 @@ Want to change who you've voted for already? Just vote again!
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+<p>Want to change who you've voted for already? Just vote again!</p>
