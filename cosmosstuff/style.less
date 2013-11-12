@@ -61,6 +61,9 @@ a {
   margin-right: auto;
 }
 
+.red {
+  color: @red;
+}
 
 /***************************************
 *              COMPONENTS              *
@@ -238,6 +241,7 @@ a {
   &.choosing1 { .poll-option { &:hover { background-color: @rank1; } } }
   &.choosing2 { .poll-option { &:hover { background-color: @rank2; } } }
   &.choosing3 { .poll-option { &:hover { background-color: @rank3; } } }
+  &.choosing4 { .poll-option { cursor: auto !important; } }
 }
 
 .poll-option {
@@ -255,9 +259,9 @@ a {
     }
   }
   // TODO Find less desperate solution than this...
-  &.rank1 { background-color: @rank1 !important; }
-  &.rank2 { background-color: @rank2 !important; }
-  &.rank3 { background-color: @rank3 !important; }
+  &.rank1 { background-color: @rank1 !important; cursor: auto !important; }
+  &.rank2 { background-color: @rank2 !important; cursor: auto !important; }
+  &.rank3 { background-color: @rank3 !important; cursor: auto !important; }
 }
 
 .instruction {
