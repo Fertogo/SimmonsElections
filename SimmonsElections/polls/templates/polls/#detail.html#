@@ -1,0 +1,35 @@
+{% load url from future %}
+<h1>{{ poll.question }}</h1>
+
+{% if error_message %}<p style='color:red'><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if kerb %}Hi {{ kerb }}!<br>{% endif %}
+<br>
+{% if choice_num == 1 and answer.nonempty %}
+You have voted previously on this poll: Picking new answers will clear your previous selection.<br>
+{% else %}
+Your selections so far:<br>
+{% endif %}
+1. {% if answer.first_choice %}{{answer.first_choice}}{% endif %}<br>
+{% if candidates.count > 1 %}2. {% if answer.second_choice %}{{answer.second_choice}}{% endif %}<br>{% endif %}
+{% if candidates.count > 1 %}3. {% if answer.third_choice %}{{answer.third_choice}}{% endif %}<br>{% endif %}
+<br>
+{% if choice_num == 1 %}
+Pick your first choice: 
+{% elif choice_num == 2 %}
+Pick your second choice:
+{% elif choice_num == 3 %}
+Pick your third choice:
+{% endif %}
+<form action="{% url 'poll_vote' poll.id %}" method="post">
+{% csrf_token %}
+{% for choice in candidates %}
+<div>
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="this.form.submit()" {% if choice_num != 1 %}{% if choice == answer.first_choice or choice == answer.second_choice or choice == answer.third_choice %}disabled{% endif %}{% endif %}/>
+    <label for="choice{{ forloop.counter }}" style='{% if choice_num != 1 %}{% if choice == answer.first_choice or choice == answer.second_choice or choice == answer.third_choice %}text-decoration:line-through; color:#CCC;{% endif %}{% endif %}'><b>{{ choice.choice }}</b></label><br />
+    <div style='margin-left:50px'>{{ choice.bio }}</div>
+    </div>
+{% endfor %}
+<input type="hidden" name="choice_num" value="{% if choice_num %}{{ choice_num }}{% else %}1{% endif %}">
+</form>
+<a href="{% url 'poll_list' %}">I'm done. Go back to the polls.</a>

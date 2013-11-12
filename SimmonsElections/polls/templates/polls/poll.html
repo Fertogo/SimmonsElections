@@ -1,0 +1,73 @@
+{% load url from future %}
+{% load staticfiles %}  
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>House Government Elections 2013-2014</title>
+    <link href="{% static 'polls/style.css' %}" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  </head>
+  <body>
+  
+    <div class="horizontal-region header">
+      <div class="content">
+        <img class="header-img" src="{% static 'polls/img/circle-icon.png' %}">
+        <div class="header-txt">House Government Elections 2013-2014</div>
+        <div class="kerberos">signed in as</br>{{kerb}}</div>
+      </div>
+    </div>
+    <div class="horizontal-region main">
+      <div class="content">
+        <a href="{% url 'poll_list' %}"><div class="btn-back">Go Back</div></a>
+        <div class="section">
+          <div class="title">{{poll.question}}</div>
+	  {% for candidate in candidates %}
+          <div class="name">
+            {{ candidate.choice}}
+          </div>
+          <div class="blurb">
+	    {{ candidate.bio}}
+          </div>
+	  {% endfor %}
+        </div>
+
+        <div class="section choosing{{next_choice_num}}">
+          <div class="title">Vote</div>
+	  <form id='pollform' action="{% url 'poll_vote' poll.id %}" method="post">
+	    {% csrf_token %}	    
+	  {% if next_choice_num == 0 %}
+          <div class="instruction">You voted on {{answer.created}}. Click clear to select new candidates.</div>
+	  {% elif next_choice_num == 1 %}
+          <div class="instruction">Please select your <b>first choice</b> by clicking their name.</div>
+	  {% elif next_choice_num == 4 or next_choice_num > candidates|length %}
+          <div class="instruction">You have selected these candidates. Click clear to change your answers or done to return to the poll list.</div>
+	  {% elif next_choice_num == 2 %}
+          <div class="instruction">Please select your <b>second choice</b> by clicking their name.</div>
+	  {% elif next_choice_num == 3 %}
+          <div class="instruction">Please select your <b>third choice</b> by clicking their name.</div>
+	  {% endif %}
+
+	  {% for candidate in candidates %}	  
+          <div class="poll-option {% if candidate.rank %}rank{{candidate.rank}}{% endif %}" {% if candidate.rank or next_choice_num > 3 %}{% else %}onclick="document.getElementById('choice').value={{candidate.choice.id}}; document.getElementById('pollform').submit()"{% endif %}>
+            <div class="circle">{{candidate.rank}}</div>
+            {{candidate.choice.choice}}
+          </div>
+	  {% endfor %}
+	  <input type="hidden" id="choice_num" name="choice_num" value="{% if next_choice_num %}{{ next_choice_num }}{% else %}1{% endif %}">
+	  <input id="choice" type="hidden" name="choice" value="" />
+	  </form>
+          <div class="btn-edit" onclick="document.getElementById('choice_num').value=0; document.getElementById('pollform').submit()">Clear</div>
+          <a href='{% url 'poll_list' %}'><div class="btn-done">Done</div></a>
+        </div>
+
+      </div>
+    </div>
+    <div class="horizontal-region footer">
+      <div class="content">
+        <div class="footer-txt">If you experience any difficulties with this site, email <a href="mailto:simmons-nominations@mit.edu">simmons-nominations@mit.edu</a>.</div>
+      </div>
+    </div>
+
+  </body>
+</html>
