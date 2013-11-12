@@ -52,7 +52,7 @@ def index(request, **kwargs):
         except (AnswerSet.DoesNotExist):
             poll_obj['answer'] = None
         poll_obj['choices'] = []
-        for choice in  poll.choice_set:
+        for choice in poll.choice_set.all():
             choice_obj = {}
             choice_obj['choice'] = choice
             if poll_obj['answer']:
