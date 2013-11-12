@@ -29,7 +29,7 @@
         <div class="tile {% if poll_obj.answer != None %}voted{% else %}notyet{% endif %}">
           <div class="position">{{ poll_obj.poll.question }}</div>
 	  {% if poll_obj.answer != None %}
-          <div class="status">Voted at {{poll_obj.answer.created}}</div>
+          <div class="status">Voted on {{poll_obj.answer.created}}</div>
 	  {% else %}
           <div class="status">You haven't voted yet.</div>	  
 	  {% endif %}

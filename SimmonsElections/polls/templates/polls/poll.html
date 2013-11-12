@@ -6,7 +6,7 @@
     <title>House Government Elections 2013-2014</title>
     <link href="{% static 'polls/style.css' %}" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>    
   </head>
   <body>
   
@@ -27,7 +27,7 @@
             {{ candidate.choice}}
           </div>
           <div class="blurb">
-	    {{ candidate.bio}}
+	    {{candidate.choice.bio}}
           </div>
 	  {% endfor %}
         </div>
@@ -49,7 +49,7 @@
 	  {% endif %}
 
 	  {% for candidate in candidates %}	  
-          <div class="poll-option {% if candidate.rank %}rank{{candidate.rank}}{% endif %}" {% if candidate.rank or next_choice_num > 3 %}{% else %}onclick="document.getElementById('choice').value={{candidate.choice.id}}; document.getElementById('pollform').submit()"{% endif %}>
+          <div class="poll-option {% if candidate.rank %}rank{{candidate.rank}}{% endif %}" {% if candidate.rank or next_choice_num > 3 %}{% else %}onclick="$('#choice').val({{candidate.choice.id}}); $('#pollform').submit()"{% endif %}>
             <div class="circle">{{candidate.rank}}</div>
             {{candidate.choice.choice}}
           </div>
@@ -57,10 +57,9 @@
 	  <input type="hidden" id="choice_num" name="choice_num" value="{% if next_choice_num %}{{ next_choice_num }}{% else %}1{% endif %}">
 	  <input id="choice" type="hidden" name="choice" value="" />
 	  </form>
-          <div class="btn-edit" onclick="document.getElementById('choice_num').value=0; document.getElementById('pollform').submit()">Clear</div>
-          <a href='{% url 'poll_list' %}'><div class="btn-done">Done</div></a>
+          <div class="btn-edit" onclick="$('#choice_num').val(0); $('#choice').val(''); $('#pollform').submit();">Clear</div>
         </div>
-
+        <a href='{% url 'poll_list' %}'><div class="btn-done">Done</div></a>
       </div>
     </div>
     <div class="horizontal-region footer">
