@@ -9,9 +9,10 @@ class Resident(models.Model):
 
 class Poll(models.Model):
     question = models.CharField(max_length=200)
+    order = models.IntegerField()
     
     def __unicode__(self):
-        return self.question
+        return str(self.order) + ": " +  self.question
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll)

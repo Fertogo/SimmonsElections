@@ -38,7 +38,7 @@ except ImportError, exp:
 def index(request, **kwargs):
     kerb = str(request.user)
     kerb_obscured = obscure_str(request.user)
-    latest_poll_list = Poll.objects.all().order_by('question')
+    latest_poll_list = Poll.objects.all().order_by('order', 'question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     poll_list = []
     for poll in latest_poll_list:
@@ -52,7 +52,7 @@ def index(request, **kwargs):
         except (AnswerSet.DoesNotExist):
             poll_obj['answer'] = None
         poll_obj['choices'] = []
-        for choice in  poll.choice_set:
+        for choice in poll.choice_set.order_by('choice'):
             choice_obj = {}
             choice_obj['choice'] = choice
             if poll_obj['answer']:
@@ -106,30 +106,36 @@ def login_email(request):
 ###
 # Responses for various form displays
 
+def get_candidates_and_rank(poll, answer):
+    candidates = []
+    for choice in poll.choice_set.order_by('choice'):
+        choice_obj = {}
+        choice_obj['choice'] = choice
+        if answer:
+            for i in range(1, 4):
+                if answer.get_choice(i) == choice:
+                    choice_obj['rank'] = i
+        candidates.append(choice_obj)
+    return candidates
+
 def form_choice_response(request, poll, kerb, answer, next_choice_num):
     logger.debug(kerb + " - Displaying form - " + poll.question + " - choice " + str(next_choice_num))
-    return render_to_response('polls/detail.html', {
+    poll.choice_set.order_by('choice'),
+    return render_to_response('polls/poll.html', {
         'poll': poll,
-        'candidates' : poll.choice_set.order_by('choice'),
+        'candidates' : get_candidates_and_rank(poll, answer),
         'answer': answer,
-        'choice_num': next_choice_num,
+        'next_choice_num': next_choice_num,
         'kerb': kerb}, context_instance=RequestContext(request))
 
 def form_error_response(request, poll, kerb, answer, error_message, next_choice_num = 1):
-    return render_to_response('polls/detail.html', {
+    return render_to_response('polls/poll.html', {
         'poll': poll,
-        'candidates' : poll.choice_set.order_by('choice'),        
+        'candidates' : get_candidates_and_rank(poll, answer),
         'answer': answer,
-        'choice_num': next_choice_num,
+        'next_choice_num': next_choice_num,
         'error_message': error_message,
         'kerb': kerb}, context_instance=RequestContext(request))
-
-def form_completion_response(request, poll, kerb, answer):
-    logger.debug(kerb + " - Displaying form completion - " + poll.question)
-    return render_to_response('polls/confirm.html', {
-        'poll': poll,
-        'answer': answer,
-        'kerb': kerb}, context_instance=RequestContext(request))    
         
 @login_required(login_url=reverse_lazy('polls_login'))
 def vote(request, poll_id):
@@ -148,7 +154,13 @@ def vote(request, poll_id):
     # Process and validate choice num
     # If the user has not submitting any choices, choice_num will not be set
     if 'choice_num' not in request.POST:
-        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer, next_choice_num = 1)
+        if answer.nonempty():
+            # Choice exists, as if we've already selected everyone.
+            next_choice_num = 4
+        else:
+            # First time, first choice is 1.
+            next_choice_num = 1
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer, next_choice_num=next_choice_num)
     try:
         choice_num = int(request.POST['choice_num'])
     except:
@@ -157,7 +169,14 @@ def vote(request, poll_id):
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    error_message="Invalid choice_num -- actions are logged: " +
                                    "stop messing with the form.")
-    if choice_num not in [1,2,3]:
+
+    if choice_num == 0:
+        if answer.nonempty():
+            answer.active = False
+            answer.save()
+            answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer, next_choice_num=1)        
+    elif choice_num not in [1,2,3]:
         # Invalid choice number
         logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])        
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
@@ -214,11 +233,8 @@ def vote(request, poll_id):
 
     ####
     # Determine and display response
-    if choice_num == MAX_CHOICES or choice_num == len(poll.choice_set.all()):
-        return form_completion_response(request, poll=poll, kerb=kerb, answer=answer)
-    else:
-        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer,
-                                    next_choice_num = choice_num + 1)
+    return form_choice_response(request, poll=poll, kerb=kerb, answer=answer,
+                                next_choice_num = choice_num + 1)
 
 def results(request):
     kerb = str(request.user)
