@@ -116,6 +116,11 @@ a {
   left: 835px;
   width: 120px;
   text-align: right;
+  color: #999999;
+}
+.kerberos b {
+  font-weight: 700;
+  color: #444444;
 }
 .helper-txt {
   display: block;
@@ -213,7 +218,7 @@ a {
 }
 .section .title {
   font-size: 40px;
-  color: #bbb;
+  color: #999999;
   font-weight: 300;
   margin: 0px 0px 20px 20px;
 }
@@ -239,14 +244,14 @@ a {
   background-color: #ebe922;
 }
 .section.choosing4 .poll-option {
-  cursor: auto !important;
+  cursor: default !important;
 }
 .poll-option {
   display: block;
   width: 200px;
   padding: 10px 40px;
   border-radius: 3px;
-  margin: 0px;
+  margin-left: 20px;
   background-color: #ffffff;
   transition: background-color 0.2s;
   cursor: pointer;
@@ -258,15 +263,15 @@ a {
 }
 .poll-option.rank1 {
   background-color: #22eb3a !important;
-  cursor: auto !important;
+  cursor: default !important;
 }
 .poll-option.rank2 {
   background-color: #b5eb22 !important;
-  cursor: auto !important;
+  cursor: default !important;
 }
 .poll-option.rank3 {
   background-color: #ebe922 !important;
-  cursor: auto !important;
+  cursor: default !important;
 }
 .instruction {
   margin-left: 20px;
