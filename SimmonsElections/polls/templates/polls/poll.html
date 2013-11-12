@@ -14,7 +14,7 @@
       <div class="content">
         <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
         <div class="header-txt">House Government Elections 2013-2014</div>
-        <div class="kerberos">signed in as</br>{{kerb}}</div>
+        <div class="kerberos">signed in as</br><b>{{kerb}}</b></div>
       </div>
     </div>
     <div class="horizontal-region main">
@@ -27,15 +27,16 @@
             {{ candidate.choice}}
           </div>
           <div class="blurb">
-	    {{candidate.choice.bio}}
+	    {{candidate.choice.bio|safe}}
           </div>
 	  {% endfor %}
         </div>
 
         <div class="section choosing{{next_choice_num}}">
-          <div class="title">Vote</div>
-	  <form id='pollform' action="{% url 'poll_vote' poll.id %}" method="post">
-	    {% csrf_token %}	    
+          <div class="title" id='vote'>Vote</div>
+	  <form id='pollform' action="{% url 'poll_vote' poll.id %}#vote" method="post">
+	    {% csrf_token %}
+            <div class="instruction">Rank your 1st, 2nd, and 3rd choice for this position. Changes are saved immediately.</div>
 	  {% if next_choice_num == 0 %}
           <div class="instruction">You voted on {{answer.created}}. Click clear to select new candidates.</div>
 	  {% elif next_choice_num == 1 %}
@@ -50,8 +51,6 @@
 	  {% if error_message %}
 	  <div class="instruction red">{{ error_message }}</div>
 	  {% endif %}
-
-
 	  {% for candidate in candidates %}	  
           <div class="poll-option {% if candidate.rank %}rank{{candidate.rank}}{% endif %}" {% if candidate.rank or next_choice_num > 3 %}{% else %}onclick="$('#choice').val({{candidate.choice.id}}); $('#pollform').submit()"{% endif %}>
             <div class="circle">{% if candidate.rank %}{{candidate.rank}}{% else %}-{% endif %}</div>

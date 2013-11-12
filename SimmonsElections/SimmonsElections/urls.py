@@ -9,5 +9,5 @@ urlpatterns = patterns('',
 # To end elections:    url((r'^polls/', poll_views.election_index_redirect),
 
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^$', poll_views.election_index, name = 'election_index'),
+                       url(r'^$', poll_views.polls_index_redirect, name = 'election_index'),
 )
