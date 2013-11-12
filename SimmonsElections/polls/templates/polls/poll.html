@@ -36,17 +36,17 @@
           <div class="title" id='vote'>Vote</div>
 	  <form id='pollform' action="{% url 'poll_vote' poll.id %}#vote" method="post">
 	    {% csrf_token %}
-            <div class="instruction">Rank your 1st, 2nd, and 3rd choice for this position. Changes are saved immediately.</div>
+            <div class="instruction">Select candidates in order of preference. You may select up to three candidates. Changes are saved immediately.</div>
 	  {% if next_choice_num == 0 %}
           <div class="instruction">You voted on {{answer.created}}. Click clear to select new candidates.</div>
 	  {% elif next_choice_num == 1 %}
           <div class="instruction">Please select your <b>first choice</b> by clicking their name.</div>
 	  {% elif next_choice_num == 4 or next_choice_num > candidates|length %}
-          <div class="instruction">You have selected these candidates. Click clear to change your answers or done to return to the poll list.</div>
+          <div class="instruction">Your selection is shown below. Click clear to change your answers or done to return to the poll list.</div>
 	  {% elif next_choice_num == 2 %}
-          <div class="instruction">Please select your <b>second choice</b> by clicking their name.</div>
+          <div class="instruction">If desired, select a <b>second choice</b> by clicking their name.</div>
 	  {% elif next_choice_num == 3 %}
-          <div class="instruction">Please select your <b>third choice</b> by clicking their name.</div>
+          <div class="instruction">If desired, select <b>third choice</b> by clicking their name.</div>
 	  {% endif %}
 	  {% if error_message %}
 	  <div class="instruction red">{{ error_message }}</div>

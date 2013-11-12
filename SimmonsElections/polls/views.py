@@ -239,8 +239,6 @@ def vote(request, poll_id):
 
 def results(request):
     kerb = str(request.user)
-    if kerb not in ['larsj', 'apark93']:
-        raise Http404
     logger.debug(kerb + " - Displaying results")
     response_data = {}
     answers = AnswerSet.objects.filter(active=True)

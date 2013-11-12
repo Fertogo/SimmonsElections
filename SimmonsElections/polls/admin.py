@@ -19,5 +19,5 @@ class AnswerAdmin(admin.ModelAdmin):
         ('Poll question', {'fields': ['question']}),
     ]
 
-admin.site.register(AnswerSet)#, AnswerAdmin)
+#admin.site.register(AnswerSet)#, AnswerAdmin)
 admin.site.register(Resident)
