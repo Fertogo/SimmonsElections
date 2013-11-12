@@ -12,6 +12,7 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
 from polls.models import Choice, Poll, AnswerSet, Resident
+from mit import ScriptsRemoteUserBackend
 
 from obscure import obscure_str
 import json
@@ -33,15 +34,18 @@ except ImportError, exp:
 def index(request, **kwargs):
     kerb = str(request.user)
     kerb_obscured = obscure_str(request.user)
-    latest_poll_list = Poll.objects.all()
+    latest_poll_list = Poll.objects.all().order_by('question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     for poll in latest_poll_list:
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
-            poll.answer = answer_to_poll
+            if answer_to_poll.nonempty():
+                poll.answer = answer_to_poll
+            else:
+                poll.answer = None
         except (AnswerSet.DoesNotExist):
             poll.answer = None
-    return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'kerb': kerb})
+    return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'user': request.user})
 
 def login(request):
     if 'kerberos' in request.GET and 'key' in request.GET:
@@ -55,7 +59,8 @@ def login(request):
             else:
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
-            return HttpResponse('Invalid login. Stop trying to mess around. Your actions are being logged.')
+            logger.debug(kerb + " - Invalid pw key: " + pw)
+            return HttpResponse('Invalid login -- actions are logged. Be aware that only the most recent link works for email-based login.')
     else:
         global importedLdap
         if importedLdap:
@@ -74,11 +79,13 @@ def login_email(request):
         return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = User.objects.make_random_password(length=20)
     user, created = User.objects.get_or_create(username=kerb)
+    scripts_remote_backend = ScriptsRemoteUserBackend()
+    scripts_remote_backend.configure_user(user)
     user.set_password(password)
     user.save()
     send_mail('Simmons Elections login info', 'To vote in the Simmons elections, log in through this link.\n\nhttp://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password + '\n\n If you need to log in again, you should go to this link again or request another link.', 
     'simmons-nominations@mit.edu', [kerb + '@mit.edu'], fail_silently=False)
-    return HttpResponse('Please check your email for futher instructions.')
+    return HttpResponse('Please check your email for futher voting instructions. You may close this window.')
 
 ###
 # Responses for various form displays
@@ -87,6 +94,7 @@ def form_choice_response(request, poll, kerb, answer, next_choice_num):
     logger.debug(kerb + " - Displaying form - " + poll.question + " - choice " + str(next_choice_num))
     return render_to_response('polls/detail.html', {
         'poll': poll,
+        'candidates' : poll.choice_set.order_by('choice'),
         'answer': answer,
         'choice_num': next_choice_num,
         'kerb': kerb}, context_instance=RequestContext(request))
@@ -94,6 +102,7 @@ def form_choice_response(request, poll, kerb, answer, next_choice_num):
 def form_error_response(request, poll, kerb, answer, error_message, next_choice_num = 1):
     return render_to_response('polls/detail.html', {
         'poll': poll,
+        'candidates' : poll.choice_set.order_by('choice'),        
         'answer': answer,
         'choice_num': next_choice_num,
         'error_message': error_message,
@@ -216,3 +225,12 @@ def results(request):
         response_data[question].append(ballot)
     return HttpResponse(json.dumps(response_data, sort_keys=True, indent=4),
                         content_type="application/json")
+def election_index(request):
+    return render_to_response('polls/elections-index.html')
+
+def election_index_redirect(request):
+        return HttpResponseRedirect(reverse('election_index'))
+
+def polls_index_redirect(request):
+        return HttpResponseRedirect(reverse('poll_list'))    
+
