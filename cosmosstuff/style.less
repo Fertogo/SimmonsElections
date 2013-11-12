@@ -1,12 +1,15 @@
 
 /***************************************
-*               IMPORTS                *
+*              VARIABLES               *
 ***************************************/
 
 // Mostly just colours...
 
 @import "vars";
 
+@rank1: #22eb3a; // green
+@rank2: #b5eb22; // lime
+@rank3: #ebe922; // yellow
 
 /***************************************
 *             PAGE LAYOUT              *
@@ -29,13 +32,14 @@ body {
   padding: 0;
   margin: 0;
   font-family: @baseFontFamily;
+  font-weight: 400;
   font-size: @baseFontSize;
   color: @baseFontColor;
 }
 
 a {
   text-decoration: none;
-  color: @baseFontColor;
+  color: @blue;
 }
 
 .horizontal-region {
@@ -59,6 +63,45 @@ a {
   margin-left: auto;
   margin-right: auto;
 }
+
+
+/***************************************
+*              COMPONENTS              *
+***************************************/
+
+.btn,
+.btn-back,
+.btn-done,
+.btn-edit {
+  display: inline-block;
+  height: 20px; width: 120px;
+  border-radius: 3px;
+  padding: 10px 0px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 1.0;
+  transition: opacity 0.2s;
+  color: @baseFontColor;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.circle {
+  display: inline-block;
+  position: relative;
+  left: -20px;
+  height: 20px; width: 20px;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 20px;
+
+  // These will often be overwritten....
+  opacity: 0.0;
+  background-color: @white;
+}
+
 
 /***************************************
 *          HEADER AND FOOTER           *
@@ -84,6 +127,11 @@ a {
   text-align: right;
 }
 
+.helper-txt {
+  display: block;
+  margin-bottom: 40px;
+}
+
 .footer-txt {
   position: absolute;
   top: 40px;
@@ -91,26 +139,21 @@ a {
   font-weight: 300;
 }
 
-.helper-txt {
-  display: block;
-  margin-bottom: 40px;
-}
 
 /***************************************
-*                TILES                 *
+*                INDEX                 *
 ***************************************/
 
 // White box containing individual election.
 
 .tile {
   position: relative;
-  width: 268px;
-  height: 200px;
   display: inline-table;
-  background-color: @white;
-  border: solid 1px @grayLighter;
+  height: 200px; width: 268px;
   padding: 20px 20px 30px 20px;
   margin: 0px 6px 12px 0px;
+  background-color: @white;
+  border: solid 1px @grayLighter;
   .position {
     font-size: @bigFontSize;
     color: @baseFontColor;
@@ -125,36 +168,13 @@ a {
       display: block;
       line-height: 24px;
       margin-left: 20px;
-      .circle {
-        display: inline-block;
-        position: relative;
-        opacity: 0.0;
-        left: -20px;
-        height: 20px; width: 20px;
-        border-radius: 20px;
-        text-align: center;
-        font-weight: 700;
-        line-height: 20px;
-      }
       &.rank1, &.rank2, &.rank3 {
         font-weight: 700;
         .circle { opacity: 1.0; }
       }
-      &.rank1 {
-        .circle {
-          background-color: @green;
-        }
-      }
-      &.rank2 {
-        .circle {
-          background-color: @lime;
-        }
-      }
-      &.rank3 {
-        .circle {
-          background-color: @yellow;
-        }
-      }
+      &.rank1 { .circle { background-color: @rank1; } }
+      &.rank2 { .circle { background-color: @rank2; } }
+      &.rank3 { .circle { background-color: @rank3; } }
     }
     .btn {
       background-color: @grayLighter;
@@ -176,21 +196,21 @@ a {
     background-color: @blue;
     color: @white;
   }
+  .btn {
+    position: absolute;
+    top: 198px; left: 178px;
+  }
 }
 
-.btn {
-  display: block;
-  position: absolute;
-  top: 218px; left: 178px;
-  height: 20px; width: 120px;
-  padding: 10px 0px;
-  text-align: center;
-  cursor: pointer;
-  opacity: 1.0;
-  transition: opacity 0.2s;
-  &:hover {
-    opacity: 0.7;
-  }
+
+/***************************************
+*              VOTE/POLL               *
+***************************************/
+
+.btn-back {
+  position: relative;
+  margin-bottom: 20px;
+  background-color: @grayLighter;
 }
 
 .section {
@@ -218,70 +238,29 @@ a {
     font-size: 14px;
     color: @softFontColor;
   }
-  &.choosing1 {
-    .poll-option {
-      &:hover {
-        background-color: @green;
-      }
-    }
-  }
-  &.choosing2 {
-    .poll-option {
-      &:hover {
-        background-color: @lime;
-      }
-    }
-  }
-  &.choosing3 {
-    .poll-option {
-      &:hover {
-        background-color: @yellow;
-      }
-    }
-  }
-}
-
-.btn-back {
-  display: inline-block;
-  position: relative;
-  height: 20px; width: 120px;
-  padding: 10px 0px;
-  margin-bottom: 20px;
-  text-align: center;
-  cursor: pointer;
-  opacity: 1.0;
-  background-color: @grayLighter;
-  transition: opacity 0.2s;
-  &:hover {
-    opacity: 0.7;
-  }
+  &.choosing1 { .poll-option { &:hover { background-color: @rank1; } } }
+  &.choosing2 { .poll-option { &:hover { background-color: @rank2; } } }
+  &.choosing3 { .poll-option { &:hover { background-color: @rank3; } } }
 }
 
 .poll-option {
   display: block;
-  margin: 0px;
+  width: 200px;
   padding: 10px 40px;
+  border-radius: 3px;
+  margin: 0px;
   background-color: @white;
   transition: background-color 0.2s;
   cursor: pointer;
-  &.rank1 {
+  &.rank1, &.rank2, &.rank3 {
     .circle {
       opacity: 1.0;
     }
-    background-color: @green !important;
   }
-  &.rank2 {
-    .circle {
-      opacity: 1.0;
-    }
-    background-color: @lime !important;
-  }
-  &.rank3 {
-    .circle {
-      opacity: 1.0;
-    }
-    background-color: @yellow !important;
-  }
+  // TODO Find less desperate solution than this...
+  &.rank1 { background-color: @rank1 !important; }
+  &.rank2 { background-color: @rank2 !important; }
+  &.rank3 { background-color: @rank3 !important; }
 }
 
 .instruction {
@@ -290,49 +269,15 @@ a {
 }
 
 .btn-edit {
-  display: inline-block;
   position: relative;
-  height: 20px; width: 120px;
-  padding: 10px 0px;
   margin-top: 20px;
   margin-left: 20px;
-  text-align: center;
-  cursor: pointer;
-  opacity: 1.0;
   background-color: @grayLighter;
-  transition: opacity 0.2s;
-  &:hover {
-    opacity: 0.7;
-  }
 }
 
 .btn-done {
-  display: inline-block;
   position: relative;
-  height: 20px; width: 120px;
-  padding: 10px 0px;
-  margin-top: 20px;
-  margin-left: 624px;
-  text-align: center;
-  cursor: pointer;
-  opacity: 1.0;
-  color: @white;
+  margin: 10px 0px 0px 834px;
   background-color: @blue;
-  transition: opacity 0.2s;
-  &:hover {
-    opacity: 0.7;
-  }
-}
-
-.circle {
-  display: inline-block;
-  position: relative;
-  opacity: 0.0;
-  left: -20px;
-  height: 20px; width: 20px;
-  border-radius: 20px;
-  text-align: center;
-  font-weight: 700;
-  line-height: 20px;
-  background-color: @white;
+  color: @white;
 }
