@@ -4,8 +4,23 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 {% if kerb %}Hi {{ kerb }}!<br>{% endif %}
-
-Pick your {% if choice_num %}{{ choice_num }}{% else %}1{% endif %} choice.
+<br>
+{% if choice_num == 1 and answer.nonempty %}
+You have voted previously on this poll: Picking new answers will clear your previous selection.<br>
+{% else %}
+Your selections so far:<br>
+{% endif %}
+1. {% if answer.first_choice %}{{answer.first_choice}}{% endif %}<br>
+2. {% if answer.second_choice %}{{answer.second_choice}}{% endif %}<br>
+3. {% if answer.third_choice %}{{answer.third_choice}}{% endif %}<br>
+<br>
+{% if choice_num == 1 %}
+Pick your first choice: 
+{% elif choice_num == 2 %}
+Pick your second choice:
+{% elif choice_num == 3 %}
+Pick your third choice:
+{% endif %}
 <form action="{% url 'poll_vote' poll.id %}" method="post">
 {% csrf_token %}
 {% for choice in poll.choice_set.all %}
@@ -18,10 +33,4 @@ Pick your {% if choice_num %}{{ choice_num }}{% else %}1{% endif %} choice.
 <input type="hidden" name="choice_num" value="{% if choice_num %}{{ choice_num }}{% else %}1{% endif %}">
 <input type="hidden" name="kerb" value="merp">
 </form>
-<br><br>
-So far, you have picked<br>
-1. {% if answer.first_choice %}{{answer.first_choice}}{% endif %}<br>
-2. {% if answer.second_choice %}{{answer.second_choice}}{% endif %}<br>
-3. {% if answer.third_choice %}{{answer.third_choice}}{% endif %}<br>
-<br><br>
 <a href="{% url 'poll_list' %}">I'm done. Go back to the polls.</a>
