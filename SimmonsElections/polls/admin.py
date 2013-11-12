@@ -7,7 +7,7 @@ class ChoiceInline(admin.TabularInline):
 
 class PollAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['question']}),
+        (None, {'fields': ['question', 'order']}),
     ]
     inlines = [ChoiceInline]
     

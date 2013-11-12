@@ -38,7 +38,7 @@ except ImportError, exp:
 def index(request, **kwargs):
     kerb = str(request.user)
     kerb_obscured = obscure_str(request.user)
-    latest_poll_list = Poll.objects.all().order_by('question')
+    latest_poll_list = Poll.objects.all().order_by('order', 'question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     poll_list = []
     for poll in latest_poll_list:
@@ -52,7 +52,7 @@ def index(request, **kwargs):
         except (AnswerSet.DoesNotExist):
             poll_obj['answer'] = None
         poll_obj['choices'] = []
-        for choice in poll.choice_set.all():
+        for choice in poll.choice_set.order_by('choice'):
             choice_obj = {}
             choice_obj['choice'] = choice
             if poll_obj['answer']:
