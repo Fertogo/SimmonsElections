@@ -12,7 +12,7 @@
   
     <div class="horizontal-region header">
       <div class="content">
-        <img class="header-img" src="{% static 'polls/img/circle-icon.png' %}">
+        <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
         <div class="header-txt">House Government Elections 2013-2014</div>
         <div class="kerberos">signed in as</br>{{kerb}}</div>
       </div>
@@ -47,10 +47,14 @@
 	  {% elif next_choice_num == 3 %}
           <div class="instruction">Please select your <b>third choice</b> by clicking their name.</div>
 	  {% endif %}
+	  {% if error_message %}
+	  <div class="instruction red">{{ error_message }}</div>
+	  {% endif %}
+
 
 	  {% for candidate in candidates %}	  
           <div class="poll-option {% if candidate.rank %}rank{{candidate.rank}}{% endif %}" {% if candidate.rank or next_choice_num > 3 %}{% else %}onclick="$('#choice').val({{candidate.choice.id}}); $('#pollform').submit()"{% endif %}>
-            <div class="circle">{{candidate.rank}}</div>
+            <div class="circle">{% if candidate.rank %}{{candidate.rank}}{% else %}-{% endif %}</div>
             {{candidate.choice.choice}}
           </div>
 	  {% endfor %}

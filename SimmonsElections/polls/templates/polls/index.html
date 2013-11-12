@@ -12,7 +12,7 @@
   
     <div class="horizontal-region header">
       <div class="content">
-        <img class="header-img" src="{% static 'polls/img/circle-icon.png' %}">
+        <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
         <div class="header-txt">House Government Elections 2013-2014</div>
         <div class="kerberos">signed in as</br>{{user.username}}</div>
       </div>
