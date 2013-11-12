@@ -40,7 +40,7 @@ class AnswerSet(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return self.name + " (" + unobscure_str(self.name) + ") " + " answering " + str(self.question) + " at " + str(self.created)
+        return self.name + " answering " + str(self.question) + " at " + str(self.created) + (" INACTIVE" if not self.active else "")
         
     def get_answers(self):
         return 'first=' + str(self.first_choice) + ', second=' + str(self.second_choice) + ', third=' + str(self.third_choice)

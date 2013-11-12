@@ -6,3 +6,4 @@ local_settings*.py
 SimmonsElections/polls/migrations/*
 db.dat
 records.txt
+*.json
