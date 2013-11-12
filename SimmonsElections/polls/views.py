@@ -12,7 +12,11 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
 from polls.models import Choice, Poll, AnswerSet, Resident
-from mit import ScriptsRemoteUserBackend
+try:
+    from mit import ScriptsRemoteUserBackend
+except ImportError, exp:
+    pass
+    
 
 from obscure import obscure_str
 import json
@@ -36,16 +40,28 @@ def index(request, **kwargs):
     kerb_obscured = obscure_str(request.user)
     latest_poll_list = Poll.objects.all().order_by('question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
+    poll_list = []
     for poll in latest_poll_list:
+        poll_obj = {'poll': poll}
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
             if answer_to_poll.nonempty():
-                poll.answer = answer_to_poll
+                poll_obj['answer'] = answer_to_poll
             else:
-                poll.answer = None
+                poll_obj['answer'] = None
         except (AnswerSet.DoesNotExist):
-            poll.answer = None
-    return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list, 'user': request.user})
+            poll_obj['answer'] = None
+        poll_obj['choices'] = []
+        for choice in  poll.choice_set:
+            choice_obj = {}
+            choice_obj['choice'] = choice
+            if poll_obj['answer']:
+                for i in range(1, 4):
+                    if poll_obj['answer'].get_choice(i) == choice:
+                        choice_obj['rank'] = i
+            poll_obj['choices'].append(choice_obj)
+        poll_list.append(poll_obj)
+    return render_to_response('polls/index.html', {'poll_list': poll_list, 'user': request.user})
 
 def login(request):
     if 'kerberos' in request.GET and 'key' in request.GET:

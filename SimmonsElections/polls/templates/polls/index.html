@@ -1,15 +1,53 @@
 {% load url from future %}
-<h1>Simmons Elections - Polls</h1>
-<p>Hi {{ user.first_name }} ({{user.username}})! </p>
-<p>Polls will close on *** at ***pm.  </p>
-<p>Select a position below to vote: </p>
-{% if latest_poll_list %}
-    <ul>
-    {% for poll in latest_poll_list %} <!-- /polls/{{ poll.id }}" -->
-        <li><a href="{% url 'poll_vote' poll.id %}">{{ poll.question }}</a> {% if poll.answer %}Answered at {{ poll.answer.created }}!{% endif %}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
-<p>Want to change who you've voted for already? Just vote again!</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>House Government Elections 2013-2014</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  </head>
+  <body>
+  
+    <div class="horizontal-region header">
+      <div class="content">
+        <img class="header-img" src="circle-icon.png">
+        <div class="header-txt">House Government Elections 2013-2014</div>
+        <div class="kerberos">signed in as</br>cosmosd</div>
+      </div>
+    </div>
+    <div class="horizontal-region main">
+      <div class="content">
+
+        <div class="helper-txt">
+	  Hi {{ user.first_name }} ({{user.username}}),<br />
+          There are 16 positions up for election. You may choose your 1st, 2nd, and 3rd choice for each position. Until 11/17, you can go back and change your vote.
+        </div>
+
+	{% for poll_obj in poll_list %} <!-- /polls/{{ poll.id }}" -->	
+        <div class="tile {% if poll.answer %}voted{% else %}notyet{% endif %}">
+          <div class="position">{{ poll_obj.poll.question }}</div>
+	  {% if poll_obj.answer %}
+          <div class="status">At {{poll_obj.answer.created}}, you voted for...</div>
+	  {% else %}
+          <div class="status">You haven't voted yet.</div>	  
+	  {% endif %}
+
+	  {% for choice in poll_obj.choices %}
+          <div class="option {% if choice.rank %}rank{{choice.rank}}{% endif %}">
+	    {% if choice.rank %}<div class="circle">{{choice.rank}}</div>{% endif %}
+            Caitlin Heber
+          </div>
+	  {% endfor %}
+          <a href=""><div class="btn">{% if poll_obj.answer %}Change{% else %}Vote{% endif %}</div></a>
+        </div>
+      </div>
+    </div>
+    <div class="horizontal-region footer">
+      <div class="content">
+        <div class="footer-txt">If you experience any difficulties with this site, email <a href="mailto:simmons-nominations@mit.edu">simmons-nominations@mit.edu</a>.</div>
+      </div>
+    </div>
+
+  </body>
+</html>
