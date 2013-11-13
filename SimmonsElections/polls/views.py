@@ -175,13 +175,13 @@ def vote(request, poll_id):
 
     ## Choice_num == 0 means clear the answer set, other choice_num involve changing the choices
     if choice_num == 0:
-        new_answer = answer
         if answer.nonempty():
             new_answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
             answer.active = False
             answer.save()
             new_answer.save()
-        return form_choice_response(request, poll=poll, kerb=kerb, answer=new_answer, next_choice_num=1)
+            answer = new_answer
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer, next_choice_num=1)
     elif choice_num not in [1,2,3]:
         # Invalid choice number
         logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])        
@@ -200,17 +200,6 @@ def vote(request, poll_id):
         return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
                                    next_choice_num = choice_num,                                   
                                    error_message="Invalid choice -- actions are logged: " +
-                                   "stop messing with the form.")
-
-    #####
-    # Submitting a new response for choice 1 will disable the previous submission and
-    # start a new submission
-    if choice_num == 1 and answer.nonempty():
-        logger.warn(kerb + " - Invalid ballot choice 1 - " + poll.question + ": " + str(answer.signature()))
-        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb_obscured, question=poll, active=True)
-        return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
-                                   next_choice_num = choice_num,
-                                   error_message="Invalid ballot, must be cleared first -- actions are logged: " +
                                    "stop messing with the form.")
 
     #####
@@ -234,7 +223,6 @@ def vote(request, poll_id):
     
     #####
     # Save logging information
-    # TODO
     logger.debug(kerb + " - Saving ballot - " + poll.question + ": " + str(answer.signature()))
         
     #####
