@@ -175,12 +175,13 @@ def vote(request, poll_id):
 
     ## Choice_num == 0 means clear the answer set, other choice_num involve changing the choices
     if choice_num == 0:
+        new_answer = answer
         if answer.nonempty():
             new_answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
             answer.active = False
             answer.save()
             new_answer.save()
-        return form_choice_response(request, poll=poll, kerb=kerb, answer=new_answer, next_choice_num=1)        
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=new_answer, next_choice_num=1)
     elif choice_num not in [1,2,3]:
         # Invalid choice number
         logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])        
