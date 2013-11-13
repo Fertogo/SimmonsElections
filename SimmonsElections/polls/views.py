@@ -76,13 +76,13 @@ def login(request):
                 return HttpResponse('Your account has been disabled. Contact simmons-nominations@mit.edu for help.')
         else:
             logger.debug(kerb + " - Invalid pw key: " + pw)
-            return HttpResponse('Invalid login -- actions are logged. Be aware that only the most recent link works for email-based login.')
+            return render_to_response('polls/simple-message.html', {'message': 'Invalid login -- actions are logged. Be aware that only the most recent link works for email-based login.'})            
     else:
         global importedLdap
         if importedLdap:
-            return mit.scripts_login(request, template_name='polls/login_fail.html')
+            return mit.scripts_login(request, template_name='polls/login_fail_new.html')
         else:
-            return render_to_response('polls/login_fail.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
+            return render_to_response('polls/login_fail_new.html', {'error_message': 'Ldap not installed. Contact simmons-nominations@mit.edu with this error message please.'})
         return HttpResponseRedirect(reverse('poll_list'))
 
 def login_email(request):
@@ -92,7 +92,7 @@ def login_email(request):
     if kerb[-8:].lower() == '@mit.edu':
         kerb = kerb[:-8]
     if Resident.objects.filter(athena=kerb).count() == 0:
-        return render_to_response('polls/login_fail.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
+        return render_to_response('polls/login_fail_new.html', {'email_error': kerb + ' is not a Simmons resident email! If you think it is, email simmons-nominations@mit.edu.'}, context_instance=RequestContext(request))
     password = User.objects.make_random_password(length=20)
     user, created = User.objects.get_or_create(username=kerb)
     scripts_remote_backend = ScriptsRemoteUserBackend()
@@ -101,7 +101,7 @@ def login_email(request):
     user.save()
     send_mail('Simmons Elections login info', 'To vote in the Simmons elections, log in through this link.\n\nhttp://simmons-hall.scripts.mit.edu/elections/polls/login?kerberos=' + kerb + "&key=" + password + '\n\n If you need to log in again, you should go to this link again or request another link.', 
     'simmons-nominations@mit.edu', [kerb + '@mit.edu'], fail_silently=False)
-    return HttpResponse('Please check your email for futher voting instructions. You may close this window.')
+    return render_to_response('polls/simple-message.html', {'message': 'Please check your email for futher voting instructions. You may close this window.', 'hide_home': True})
 
 ###
 # Responses for various form displays
