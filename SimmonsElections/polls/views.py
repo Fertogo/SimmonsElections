@@ -43,6 +43,8 @@ def index(request, **kwargs):
     poll_list = []
     for poll in latest_poll_list:
         poll_obj = {'poll': poll}
+        if kerb in ['larsj', 'apark93']:
+            poll_obj['count'] = AnswerSet.objects.filter(active=True, question=poll.id).count()
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
             if answer_to_poll.nonempty():
@@ -155,7 +157,8 @@ def vote(request, poll_id):
     # If the user has not submitting any choices, choice_num will not be set
     if 'choice_num' not in request.POST:
         if answer.nonempty():
-            # Choice exists, as if we've already selected everyone.
+            # Choice exists, as if we've already selected everyone. A choice num of 4 will not create any
+            # links to submit the form. It signifies to the template that the answer is done.
             next_choice_num = 4
         else:
             # First time, first choice is 1.
@@ -170,12 +173,14 @@ def vote(request, poll_id):
                                    error_message="Invalid choice_num -- actions are logged: " +
                                    "stop messing with the form.")
 
+    ## Choice_num == 0 means clear the answer set, other choice_num involve changing the choices
     if choice_num == 0:
         if answer.nonempty():
+            new_answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
             answer.active = False
             answer.save()
-            answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
-        return form_choice_response(request, poll=poll, kerb=kerb, answer=answer, next_choice_num=1)        
+            new_answer.save()
+        return form_choice_response(request, poll=poll, kerb=kerb, answer=new_answer, next_choice_num=1)        
     elif choice_num not in [1,2,3]:
         # Invalid choice number
         logger.warn(kerb + " - Invalid choice num - " + poll.question + ": " + request.POST['choice_num'])        
@@ -200,9 +205,12 @@ def vote(request, poll_id):
     # Submitting a new response for choice 1 will disable the previous submission and
     # start a new submission
     if choice_num == 1 and answer.nonempty():
-        answer.active = False
-        answer.save()
-        answer = AnswerSet(name=kerb_obscured, question=poll, active=True)
+        logger.warn(kerb + " - Invalid ballot choice 1 - " + poll.question + ": " + str(answer.signature()))
+        (answer, answer_created) = AnswerSet.objects.get_or_create(name=kerb_obscured, question=poll, active=True)
+        return form_error_response(request, poll=poll, kerb=kerb, answer=answer,
+                                   next_choice_num = choice_num,
+                                   error_message="Invalid ballot, must be cleared first -- actions are logged: " +
+                                   "stop messing with the form.")
 
     #####
     # Update answer fields

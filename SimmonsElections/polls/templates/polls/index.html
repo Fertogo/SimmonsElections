@@ -30,6 +30,9 @@
 	  {% else %}
           <div class="status">You haven't voted yet.</div>	  
 	  {% endif %}
+	  {% if poll_obj.count %}
+          <div class="status">({{poll_obj.count}} active ballots)</div>
+	  {% endif %}
 	  {% for choice in poll_obj.choices %}
           <div class="option {% if choice.rank %}rank{{choice.rank}}{% endif %}">
 	    <div class="circle">{{choice.rank}}</div>
