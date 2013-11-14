@@ -43,7 +43,7 @@ def index(request, **kwargs):
     poll_list = []
     for poll in latest_poll_list:
         poll_obj = {'poll': poll}
-        if kerb in ['larsj', 'apark93']:
+        if kerb in ['larsj', 'apark93', 'skyler']:
             poll_obj['count'] = AnswerSet.objects.filter(active=True, question=poll.id).count()
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
