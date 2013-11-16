@@ -5,8 +5,9 @@ from polls import views as poll_views
 admin.autodiscover()
 
 urlpatterns = patterns('',
+# To end Elections:
+#                       url(r'^polls/', poll_views.polls_closed),
                        url(r'^polls/', include('polls.urls')),
-# To end elections:    url((r'^polls/', poll_views.election_index_redirect),
 
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^$', poll_views.polls_index_redirect, name = 'election_index'),

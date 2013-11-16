@@ -256,9 +256,12 @@ def results(request):
 def election_index(request):
     return render_to_response('polls/elections-index.html')
 
+def polls_closed(request):
+    return render_to_response('polls/polls-closed.html')
+
 def election_index_redirect(request):
-        return HttpResponseRedirect(reverse('election_index'))
+    return HttpResponseRedirect(reverse('election_index'))
 
 def polls_index_redirect(request):
-        return HttpResponseRedirect(reverse('poll_list'))    
+    return HttpResponseRedirect(reverse('poll_list'))    
 
