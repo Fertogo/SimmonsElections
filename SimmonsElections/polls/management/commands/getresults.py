@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 active_votes[answer_set] = 1
 
             stage = 1
-            ordering = []
+            reverse_ordering = []
             while len(candidates) > 0:
                 votes = {}
                 for candidate in candidates:
@@ -48,7 +48,7 @@ class Command(BaseCommand):
 
                 # determine and eliminate last-place
                 if len(candidates) == 1:
-                    ordering.append(candidates[0])
+                    reverse_ordering.append(candidates[0])
                     self.stdout.write("    => %s wins!\n" % self.hash(candidates[0].choice, key))                    
                     self.stdout.write("\n")
                     break
@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
                 self.stdout.write("    => %s eliminated\n" % self.hash(min_candidate.choice, key))
 
-                ordering.insert(0, min_candidate)
+                reverse_ordering.append(min_candidate)
                 candidates.remove(min_candidate)
                 # Reallocate votes
                 transfer_votes = dict()
@@ -83,6 +83,7 @@ class Command(BaseCommand):
                 self.stdout.write("    \n")
                 stage += 1
 
+            ordering = reverse_ordering[::-1]
             self.stdout.write("  RESULTS:\n")
             for (i, winner) in enumerate(ordering):
                 self.stdout.write("    %d. %s\n" % (i + 1, self.hash(winner.choice, key)))
