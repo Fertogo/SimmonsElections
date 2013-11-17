@@ -19,9 +19,19 @@ class Command(BaseCommand):
         for poll in Poll.objects.all():
             key = str(time.time())
             self.stdout.write("===============================================\n")
-            self.stdout.write("Results for Poll %s - %s\n" % (poll.id, poll.question))
+            self.stdout.write("Results for Poll %s - %s\n\n" % (poll.id, poll.question))
 
             answer_sets = [answer_set for answer_set in AnswerSet.objects.all().filter(active=True, question=poll)]
+
+            self.stdout.write("Raw totals:\n")
+            answer_set_counts = {}
+            for answer_set in answer_sets:
+                answer_set_tup = tuple(self.hash(getattr(answer_set.get_choice(i), 'choice', 'None'), key) for i in range(1, 4))
+                answer_set_counts[answer_set_tup] = answer_set_counts.get(answer_set_tup, 0) + 1
+            for (answer_set_tup, cnt) in sorted(list(answer_set_counts.iteritems()), key = lambda (k, v): k):
+                self.stdout.write("  %s: %s\n" % (str(answer_set_tup), cnt))
+            self.stdout.write("\n")
+            
             candidates = [candidate for candidate in poll.choice_set.all()]
             results = []
 

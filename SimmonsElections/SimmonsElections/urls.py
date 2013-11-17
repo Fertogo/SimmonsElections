@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
 # To end Elections:
 #                       url(r'^polls/', poll_views.polls_closed),
+                       url(r'^closed/', poll_views.polls_closed),                       
                        url(r'^polls/', include('polls.urls')),
 
                        url(r'^admin/', include(admin.site.urls)),
