@@ -22,7 +22,7 @@
 	  <p>Hi {{ user.first_name }},</p>
 	  <p>There are sixteen positions up for election. You may choose your 1st, 2nd, and 3rd choice for each position. Results will be determined by instant-runoff voting <a href="http://en.wikipedia.org/wiki/Instant-runoff_voting">[more info]</a>. Until <b>polls close at 5pm on Sunday, November 17</b>, you can come back and change your vote.</p>
         </div>
-	{% for poll_obj in poll_list %} <!-- /polls/{{ poll.id }}" -->	
+	{% for poll_obj in poll_list %}
         <div class="tile {% if poll_obj.answer != None %}voted{% else %}notyet{% endif %}">
           <div class="position">{{ poll_obj.poll.question }}</div>
 	  {% if poll_obj.answer != None %}

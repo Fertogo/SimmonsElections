@@ -166,7 +166,8 @@ a {
 }
 .tile.voted .option.rank1 .circle,
 .tile.voted .option.rank2 .circle,
-.tile.voted .option.rank3 .circle {
+.tile.voted .option.rank2 .circle,
+.tile.voted .option.norank .circle {
   opacity: 1.0;
 }
 .tile.voted .option.rank1 .circle {
@@ -177,6 +178,9 @@ a {
 }
 .tile.voted .option.rank3 .circle {
   background-color: #ebe922;
+}
+.tile.voted .option.norank .circle {
+  background-color: #ffffff;
 }
 .tile.voted .btn {
   background-color: #eeeeee;

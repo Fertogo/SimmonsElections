@@ -7,6 +7,7 @@ class Command(BaseCommand):
     help = 'Get results from all polls'
 
     def hash(self, s, key):
+        return s
         return chr(ord('A') + hash(s + key) % 26) + chr(ord('A') + hash(s + key + key) % 26)
 
     def get_vote(self, answer_set, active_votes):

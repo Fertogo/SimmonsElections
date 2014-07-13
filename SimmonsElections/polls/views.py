@@ -11,7 +11,9 @@ from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
-from polls.models import Choice, Poll, AnswerSet, Resident
+from polls.models import Choice, Poll, AnswerSet, Resident, RawResults
+from django.http import Http404
+
 try:
     from mit import ScriptsRemoteUserBackend
 except ImportError, exp:
@@ -34,16 +36,16 @@ try:
 except ImportError, exp:
     importedLdap = False
 
-@login_required(login_url=reverse_lazy('polls_login'))
+
 def index(request, **kwargs):
-    kerb = str(request.user)
-    kerb_obscured = obscure_str(request.user)
+#    kerb = str(request.user)
+#    kerb_obscured = obscure_str(request.user)
     latest_poll_list = Poll.objects.all().order_by('order', 'question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     poll_list = []
     for poll in latest_poll_list:
         poll_obj = {'poll': poll}
-        if kerb in ['larsj', 'apark93', 'skyler']:
+        if kerb in ['larsj', 'apark93', 'skyler', 'kipnissn']:
             poll_obj['count'] = AnswerSet.objects.filter(active=True, question=poll.id).count()
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
@@ -64,6 +66,19 @@ def index(request, **kwargs):
             poll_obj['choices'].append(choice_obj)
         poll_list.append(poll_obj)
     return render_to_response('polls/index.html', {'poll_list': poll_list, 'user': request.user})
+
+#@login_required(login_url=reverse_lazy('polls_closed'))
+def results_index(request, **kwargs):
+    latest_poll_list = Poll.objects.all().order_by('order', 'question')
+    answers_so_far = AnswerSet.objects.all().filter(active=True)
+    poll_list = []
+
+    for poll in latest_poll_list:
+        poll_obj = {'poll': poll}
+        poll_obj['choices'] = poll.choice_set.order_by('rank')
+        poll_list.append(poll_obj)
+    return render_to_response('polls/results_index.html', {'poll_list': poll_list})
+
 
 def login(request):
     if 'kerberos' in request.GET and 'key' in request.GET:
@@ -234,34 +249,29 @@ def vote(request, poll_id):
     return form_choice_response(request, poll=poll, kerb=kerb, answer=answer,
                                 next_choice_num = choice_num + 1)
 
-def results(request):
-    kerb = str(request.user)
-    logger.debug(kerb + " - Displaying results")
-    response_data = {}
-    answers = AnswerSet.objects.filter(active=True)
-    for answer in answers:
-        if not answer.nonempty():
-            continue
-        question = answer.question.question
-        if question not in response_data:
-            response_data[question] = []
-        ballot = {}
-        ballot['name'] = answer.name
-        ballot['choices'] = [str(answer.first_choice),
-                             str(answer.second_choice),
-                             str(answer.third_choice)]
-        response_data[question].append(ballot)
-    return HttpResponse(json.dumps(response_data, sort_keys=True, indent=4),
-                        content_type="application/json")
+def raw_results(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)                                                                                                               
+    results = RawResults.objects.get(poll=poll)
+    rawtext = results.rawtext.replace('\n', '<br />')
+    return render_to_response('polls/raw_results.html',
+                              {'poll': poll,
+                               'text': rawtext})
+
 def election_index(request):
     return render_to_response('polls/elections-index.html')
 
 def polls_closed(request):
     return render_to_response('polls/polls-closed.html')
 
+def results_redirect(request):
+    return HttpResponseRedirect(reverse('results_index'))
+
+def polls_closed_redirect(request):
+    return HttpResponseRedirect(reverse('polls_closed'))
+
 def election_index_redirect(request):
     return HttpResponseRedirect(reverse('election_index'))
 
 def polls_index_redirect(request):
-    return HttpResponseRedirect(reverse('poll_list'))    
+    return HttpResponseRedirect(reverse('polls_closed'))    
 

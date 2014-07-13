@@ -11,19 +11,17 @@
   <body>
     <div class="horizontal-region header">
       <div class="content">
-        <a ><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
-        <div class="header-txt">House Government Elections 2013-2014</div>
-	{% if kerb %}
-        <div class="kerberos">signed in as</br><b>{{kerb}}</b></div>
-	{% else %}
-        <div class="kerberos">not singed in </div>
-	{% endif %}
+        <a href="{% url 'results_index' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
+        <div class="header-txt">House Government Election Results 2013-2014</div>
       </div>
     </div>
     <div class="horizontal-region main">
       <div class="content">
-	<h2>Polls Closed</h2>
-	Thanks for voting! Elections ended at 5pm. Results will be announced at tonight's house meeting (8pm in MPR).
+        <div class="helper-txt">
+	  <h2>{{ poll.question }} Details:</h2>
+	  <p><a href ="{% url 'results_index' %}">back</a></p>
+	  <pre>{{ text|safe }}</pre>
+        </div>
       </div>
     </div>
     <div class="horizontal-region footer">

@@ -1,6 +1,7 @@
 from django.db import models
 from obscure import unobscure_str
 
+
 class Resident(models.Model):
     athena = models.CharField(max_length=30, unique=True)
 
@@ -10,6 +11,12 @@ class Resident(models.Model):
 class Poll(models.Model):
     question = models.CharField(max_length=200)
     order = models.IntegerField()
+
+    def ranked_choices(self):
+        choices = []
+        for choice in self.choice_set():
+            choices.append(choice)
+        choices.sort(key = lambda c: c.rank)
     
     def __unicode__(self):
         return str(self.order) + ": " +  self.question
@@ -18,6 +25,9 @@ class Choice(models.Model):
     poll = models.ForeignKey(Poll)
     choice = models.CharField(max_length=200)
     bio = models.TextField()
+
+    rank = models.IntegerField()
+    winner = models.BooleanField()
     
     def num_first_selected(self):
         return len(AnswerSet.objects.filter(first_choice=self, active=True))
@@ -102,8 +112,13 @@ class AnswerSet(models.Model):
         else:
             out.append("C")
         return out
-
         
+class RawResults(models.Model):
+    poll = models.ForeignKey(Poll)
+    rawtext = models.TextField()
+
+    def __unicode__(self):
+        return self.rawtext
 
                 
         

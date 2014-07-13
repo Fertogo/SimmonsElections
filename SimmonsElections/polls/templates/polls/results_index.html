@@ -1,0 +1,46 @@
+{% load url from future %}
+{% load staticfiles %}  
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>House Government Elections 2013-2014</title>
+    <link href="{% static 'polls/style.css' %}" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>    
+  </head>
+  <body>
+    <div class="horizontal-region header">
+      <div class="content">
+        <a href="{% url 'results_index' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
+        <div class="header-txt">House Government Election Results 2013-2014</div>
+      </div>
+    </div>
+    <div class="horizontal-region main">
+      <div class="content">
+        <div class="helper-txt">
+	  <p>The results of the Simmons Government elections are shown below. The winning candidates are indicated by the green circles. They will be taking office in February.</p>
+	  <p>Click on "View details" to see more detailed results of the <a href='http://en.wikipedia.org/wiki/Instant-runoff_voting' target='_blank'>instant runoff</a> process.</p>
+	  <p><i>Notes: Candidates can only hold one position: Allen won Social and FROSH and chose FROSH. Juju won FROSH and Rooming and chose Rooming. Lars won President and Tech Chair and chose President.</i></p>
+        </div>
+	{% for poll_obj in poll_list %}
+        <div class="tile voted">
+          <div class="position" onclick="$('#results{{poll_obj.poll.id}}').animate({opacity:1.0})">{{ poll_obj.poll.question }}</div>
+	  <div id='results{{poll_obj.poll.id}}' style='opacity:1.0;' onclick="this.style.opacity=1.0">
+	  {% for choice in poll_obj.choices %}
+          <div class="option {% if choice.winner %}rank1{% else %} norank{% endif %}">
+	    <div class="circle">{{choice.rank}}</div>{% if choice.winner %}<b>{% endif %} {{choice.choice}} {% if choice.winner %}</b>{% endif %}
+          </div>
+	  {% endfor %}
+	  </div>
+          <a href="{% url 'raw_results' poll_obj.poll.id %}"><div class="btn">View details</div></a>
+        </div>
+	{% endfor %}
+      </div>
+    </div>
+    <div class="horizontal-region footer">
+      <div class="content">
+        <div class="footer-txt">If you experience any difficulties with this site, email <a href="mailto:simmons-nominations@mit.edu">simmons-nominations@mit.edu</a>.</div>
+      </div>
+    </div>
+  </body>
+</html>
