@@ -7,12 +7,11 @@ ADMINS = (
     ('Allen Park', 'allenpark@mit.edu'),
     ('Lars Johnson', 'larsj@mit.edu'),
 #    ('Simmons Nominations', 'simmons-nominations@mit.edu'),
-    # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
 
-# mysql database overridden in local settings
+# sqlite database overridden in local_settings.py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -47,6 +46,7 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+# Overriden in local_settings.py
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = ''
@@ -56,12 +56,14 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = ''
 
+# Overriden in local_settings.py
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = ''
 
+# Overriden in local_settings.py
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
@@ -92,6 +94,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+# Overriden in local_settings.py
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
