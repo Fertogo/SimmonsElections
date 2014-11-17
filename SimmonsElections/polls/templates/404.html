@@ -11,7 +11,7 @@
   <body>
     <div class="horizontal-region header">
       <div class="content">
-        <a href=""><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
+        <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
         <div class="header-txt">House Government Elections 2013-2014</div>
         <div class="kerberos">signed in as</br><b>{{user.username}}</b></div>
       </div>
@@ -19,7 +19,7 @@
     <div class="horizontal-region main">
       <div class="content">
         <div class="helper-txt">
-	  Page does not exist:
+	  Page does not exist.
 	</div>
       </div>
     </div>
