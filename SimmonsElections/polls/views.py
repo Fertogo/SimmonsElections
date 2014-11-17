@@ -1,3 +1,8 @@
+STATUS = {'polls_open': 0,
+          'polls_closed': 1,
+          'results': 2}
+current_status = STATUS['polls_open']
+
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -36,10 +41,9 @@ try:
 except ImportError, exp:
     importedLdap = False
 
-
 def index(request, **kwargs):
-#    kerb = str(request.user)
-#    kerb_obscured = obscure_str(request.user)
+    kerb = str(request.user)
+    kerb_obscured = obscure_str(request.user)
     latest_poll_list = Poll.objects.all().order_by('order', 'question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     poll_list = []
@@ -273,5 +277,9 @@ def election_index_redirect(request):
     return HttpResponseRedirect(reverse('election_index'))
 
 def polls_index_redirect(request):
-    return HttpResponseRedirect(reverse('polls_closed'))    
-
+    if current_status == STATUS['polls_open']:
+        return HttpResponseRedirect(reverse('election_index'))
+    elif current_status == STATUS['polls_closed']:
+        return HttpResponseRedirect(reverse('polls_closed'))
+    elif current_status == STATUS['results']:
+        return HttpResponseRedirect(reverse('results_index'))

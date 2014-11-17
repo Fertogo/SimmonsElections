@@ -1,6 +1,6 @@
 # Django settings for SimmonsElections project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -207,6 +207,7 @@ LOGGING = {
 # Load local settings if they exist
 try:
     from local_settings import *
+    print "loaded local settings"
 except ImportError, exp:
     pass
 
