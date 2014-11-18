@@ -3,7 +3,7 @@ STATUS = {'polls_open': 0,
           'results': 2,
           'before': 3}
 current_status = STATUS['polls_open']
-check_status = False
+deployed = False
 
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
@@ -44,7 +44,7 @@ except ImportError, exp:
     importedLdap = False
 
 def index(request, **kwargs):
-    if check_status and not current_status == STATUS['polls_open']:
+    if deployed and not current_status == STATUS['polls_open']:
         return return_404()
     kerb = str(request.user)
     kerb_obscured = obscure_str(request.user)
@@ -77,7 +77,7 @@ def index(request, **kwargs):
 
 #@login_required(login_url=reverse_lazy('polls_closed'))
 def results_index(request, **kwargs):
-    if check_status and not current_status == STATUS['results']:
+    if deployed and not current_status == STATUS['results']:
         return return_404()
     latest_poll_list = Poll.objects.all().order_by('order', 'question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
@@ -268,12 +268,12 @@ def raw_results(request, poll_id):
                                'text': rawtext})
 
 def election_index(request):
-    if check_status and not current_status == STATUS['before']:
+    if deployed and not current_status == STATUS['before']:
         return return_404()
     return render_to_response('polls/elections-index.html')
 
 def polls_closed(request):
-    if check_status and not current_status == STATUS['polls_closed']:
+    if deployed and not current_status == STATUS['polls_closed']:
         return return_404()
     return render_to_response('polls/polls-closed.html')
 
