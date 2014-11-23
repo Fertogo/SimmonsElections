@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>House Government Elections 2013-2014</title>
+    <title>House Elections 2014-2015</title>
     <link href="{% static 'polls/style.css' %}" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>    
@@ -13,7 +13,7 @@
     <div class="horizontal-region header">
       <div class="content">
         <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
-        <div class="header-txt">House Government Elections 2013-2014</div>
+        <div class="header-txt">House Elections 2014-2015</div>
         <div class="kerberos">signed in as</br><b>{{kerb}}</b></div>
       </div>
     </div>
@@ -22,13 +22,22 @@
         <a href="{% url 'poll_list' %}"><div class="btn-back">Go Back</div></a>
         <div class="section">
           <div class="title">{{poll.question}}</div>
+          <div class="role">{{poll.role}}</div>
+          <div class="moreinfo"><a href="http://simmons.mit.edu/officers" target="_blank">More information about role</a></div>
 	  {% for candidate in candidates %}
+	  <div class="candidate">
+	  <div class="profile">
+	    <a href="{% static 'polls/pics' %}/{{candidate.choice.profile|safe}}"> 
+	    <img src="{% static 'polls/pics' %}/{{candidate.choice.profile|safe}}" height="100px" width="100px"/>
+	    </a>
+	  </div>
           <div class="name">
             {{ candidate.choice}}
           </div>
           <div class="blurb">
 	    {{candidate.choice.bio|safe}}
           </div>
+	  </div>
 	  {% endfor %}
         </div>
 

@@ -10,6 +10,7 @@ class Resident(models.Model):
 
 class Poll(models.Model):
     question = models.CharField(max_length=200)
+    role = models.TextField()
     order = models.IntegerField()
 
     def ranked_choices(self):
@@ -25,6 +26,7 @@ class Choice(models.Model):
     poll = models.ForeignKey(Poll)
     choice = models.CharField(max_length=200)
     bio = models.TextField()
+    profile = models.CharField(max_length=200)
 
     rank = models.IntegerField()
     winner = models.BooleanField()

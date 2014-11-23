@@ -3,7 +3,9 @@ STATUS = {'polls_open': 0,
           'results': 2,
           'before': 3}
 current_status = STATUS['polls_open']
-deployed = False
+deployed = True
+
+ADMIN_KERBS = ['larsj', 'apark93', 'skyler', 'kipnissn']
 
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
@@ -43,9 +45,10 @@ try:
 except ImportError, exp:
     importedLdap = False
 
+@login_required(login_url=reverse_lazy('login'))
 def index(request, **kwargs):
     if deployed and not current_status == STATUS['polls_open']:
-        return return_404()
+        return polls_index_redirect(request)
     kerb = str(request.user)
     kerb_obscured = obscure_str(request.user)
     latest_poll_list = Poll.objects.all().order_by('order', 'question')
@@ -53,7 +56,9 @@ def index(request, **kwargs):
     poll_list = []
     for poll in latest_poll_list:
         poll_obj = {'poll': poll}
-        if kerb in ['larsj', 'apark93', 'skyler', 'kipnissn']:
+        
+        # Display the count for admins
+        if kerb in ADMIN_KERBS: 
             poll_obj['count'] = AnswerSet.objects.filter(active=True, question=poll.id).count()
         try:
             answer_to_poll = answers_so_far.get(question=poll.id, name=kerb_obscured, active=True)
@@ -63,6 +68,7 @@ def index(request, **kwargs):
                 poll_obj['answer'] = None
         except (AnswerSet.DoesNotExist):
             poll_obj['answer'] = None
+            
         poll_obj['choices'] = []
         for choice in poll.choice_set.order_by('choice'):
             choice_obj = {}
@@ -75,10 +81,10 @@ def index(request, **kwargs):
         poll_list.append(poll_obj)
     return render_to_response('polls/index.html', {'poll_list': poll_list, 'user': request.user})
 
-#@login_required(login_url=reverse_lazy('polls_closed'))
+@login_required(login_url=reverse_lazy('login'))
 def results_index(request, **kwargs):
     if deployed and not current_status == STATUS['results']:
-        return return_404()
+        return polls_index_redirect(request)
     latest_poll_list = Poll.objects.all().order_by('order', 'question')
     answers_so_far = AnswerSet.objects.all().filter(active=True)
     poll_list = []
@@ -267,19 +273,20 @@ def raw_results(request, poll_id):
                               {'poll': poll,
                                'text': rawtext})
 
-def election_index(request):
+def not_open(request):
     if deployed and not current_status == STATUS['before']:
-        return return_404()
-    return render_to_response('polls/elections-index.html')
+        return polls_index_redirect(request)
+    return render_to_response('polls/polls-not-open.html')
 
 def polls_closed(request):
     if deployed and not current_status == STATUS['polls_closed']:
-        return return_404()
+        return polls_index_redirect(request)
     return render_to_response('polls/polls-closed.html')
 
 def return_404():
     return render_to_response('404.html')
 
+# Redirect from main based on poll status.    
 def polls_index_redirect(request):
     if current_status == STATUS['polls_open']:
         return HttpResponseRedirect(reverse('index'))

@@ -1,0 +1,470 @@
+loaded local settings
+===============================================
+Results for Poll 1 - President
+
+Raw totals:
+  (u'Allen Park', u'Lars Johnson', u'Nick Hynes'): 11
+  (u'Allen Park', u'Lars Johnson', 'None'): 10
+  (u'Allen Park', u'Nick Hynes', u'Lars Johnson'): 9
+  (u'Allen Park', 'None', 'None'): 17
+  (u'Lars Johnson', u'Allen Park', u'Nick Hynes'): 31
+  (u'Lars Johnson', u'Allen Park', 'None'): 10
+  (u'Lars Johnson', u'Nick Hynes', u'Allen Park'): 10
+  (u'Lars Johnson', u'Nick Hynes', 'None'): 1
+  (u'Lars Johnson', 'None', 'None'): 22
+  (u'Nick Hynes', u'Allen Park', u'Lars Johnson'): 8
+  (u'Nick Hynes', u'Lars Johnson', u'Allen Park'): 11
+  (u'Nick Hynes', u'Lars Johnson', 'None'): 1
+  (u'Nick Hynes', 'None', 'None'): 14
+  ('None', 'None', 'None'): 4
+
+  Stage 1
+    Lars Johnson: 74
+    Allen Park: 47
+    Nick Hynes: 34
+    => Nick Hynes eliminated
+       -> None: 14
+       -> Allen Park: 8
+       -> Lars Johnson: 12
+    
+  Stage 2
+    Lars Johnson: 86
+    Allen Park: 55
+    => Allen Park eliminated
+       -> None: 17
+       -> Lars Johnson: 38
+    
+  Stage 3
+    Lars Johnson: 124
+    => Lars Johnson wins!
+
+  RESULTS:
+    1. Lars Johnson
+    2. Allen Park
+    3. Nick Hynes
+    
+===============================================
+Results for Poll 2 - Tech Chair
+
+Raw totals:
+  (u'Ada Taylor', u'Amol Bhave', u'Lars Johnson'): 4
+  (u'Ada Taylor', u'Lars Johnson', u'Amol Bhave'): 17
+  (u'Ada Taylor', u'Lars Johnson', 'None'): 9
+  (u'Ada Taylor', 'None', 'None'): 13
+  (u'Amol Bhave', u'Ada Taylor', u'Lars Johnson'): 2
+  (u'Amol Bhave', u'Lars Johnson', u'Ada Taylor'): 15
+  (u'Amol Bhave', u'Lars Johnson', 'None'): 4
+  (u'Amol Bhave', 'None', 'None'): 13
+  (u'Lars Johnson', u'Ada Taylor', u'Amol Bhave'): 16
+  (u'Lars Johnson', u'Ada Taylor', 'None'): 9
+  (u'Lars Johnson', u'Amol Bhave', u'Ada Taylor'): 15
+  (u'Lars Johnson', u'Amol Bhave', 'None'): 3
+  (u'Lars Johnson', 'None', 'None'): 23
+  ('None', 'None', 'None'): 2
+
+  Stage 1
+    Lars Johnson: 66
+    Ada Taylor: 43
+    Amol Bhave: 34
+    => Amol Bhave eliminated
+       -> None: 13
+       -> Lars Johnson: 19
+       -> Ada Taylor: 2
+    
+  Stage 2
+    Lars Johnson: 85
+    Ada Taylor: 45
+    => Ada Taylor eliminated
+       -> None: 13
+       -> Lars Johnson: 32
+    
+  Stage 3
+    Lars Johnson: 117
+    => Lars Johnson wins!
+
+  RESULTS:
+    1. Lars Johnson
+    2. Ada Taylor
+    3. Amol Bhave
+    
+===============================================
+Results for Poll 3 - FROSH Chairs
+
+Raw totals:
+  (u'Allen Park', u'Juju Wang', u'Lars Johnson'): 7
+  (u'Allen Park', u'Juju Wang', u'Nick Hynes'): 3
+  (u'Allen Park', u'Juju Wang', 'None'): 6
+  (u'Allen Park', u'Lars Johnson', u'Juju Wang'): 8
+  (u'Allen Park', u'Lars Johnson', u'Nick Hynes'): 3
+  (u'Allen Park', u'Lars Johnson', 'None'): 4
+  (u'Allen Park', u'Nick Hynes', u'Juju Wang'): 9
+  (u'Allen Park', u'Nick Hynes', u'Lars Johnson'): 8
+  (u'Allen Park', u'Nick Hynes', 'None'): 1
+  (u'Allen Park', 'None', 'None'): 14
+  (u'Juju Wang', u'Allen Park', u'Lars Johnson'): 12
+  (u'Juju Wang', u'Allen Park', u'Nick Hynes'): 9
+  (u'Juju Wang', u'Allen Park', 'None'): 7
+  (u'Juju Wang', u'Lars Johnson', u'Allen Park'): 1
+  (u'Juju Wang', u'Lars Johnson', u'Nick Hynes'): 3
+  (u'Juju Wang', u'Nick Hynes', u'Allen Park'): 6
+  (u'Juju Wang', u'Nick Hynes', u'Lars Johnson'): 1
+  (u'Juju Wang', u'Nick Hynes', 'None'): 2
+  (u'Juju Wang', 'None', 'None'): 10
+  (u'Lars Johnson', u'Allen Park', u'Juju Wang'): 2
+  (u'Lars Johnson', u'Allen Park', u'Nick Hynes'): 2
+  (u'Lars Johnson', u'Allen Park', 'None'): 3
+  (u'Lars Johnson', u'Juju Wang', u'Allen Park'): 1
+  (u'Lars Johnson', u'Juju Wang', 'None'): 1
+  (u'Lars Johnson', u'Nick Hynes', u'Allen Park'): 1
+  (u'Lars Johnson', 'None', 'None'): 2
+  (u'Nick Hynes', u'Allen Park', u'Juju Wang'): 1
+  (u'Nick Hynes', u'Allen Park', u'Lars Johnson'): 2
+  (u'Nick Hynes', u'Allen Park', 'None'): 2
+  (u'Nick Hynes', u'Juju Wang', u'Allen Park'): 1
+  (u'Nick Hynes', u'Juju Wang', u'Lars Johnson'): 1
+  (u'Nick Hynes', u'Juju Wang', 'None'): 3
+  (u'Nick Hynes', u'Lars Johnson', u'Allen Park'): 6
+  (u'Nick Hynes', u'Lars Johnson', u'Juju Wang'): 3
+  (u'Nick Hynes', 'None', 'None'): 8
+  ('None', 'None', 'None'): 3
+
+  Stage 1
+    Allen Park: 63
+    Juju Wang: 51
+    Nick Hynes: 27
+    Lars Johnson: 12
+    => Lars Johnson eliminated
+       -> Nick Hynes: 1
+       -> None: 2
+       -> Allen Park: 7
+       -> Juju Wang: 2
+    
+  Stage 2
+    Allen Park: 70
+    Juju Wang: 53
+    Nick Hynes: 28
+    => Nick Hynes eliminated
+       -> None: 8
+       -> Allen Park: 12
+       -> Juju Wang: 8
+    
+  Stage 3
+    Allen Park: 82
+    Juju Wang: 61
+    => Juju Wang eliminated
+       -> None: 24
+       -> Allen Park: 37
+    
+  Stage 4
+    Allen Park: 119
+    => Allen Park wins!
+
+  RESULTS:
+    1. Allen Park
+    2. Juju Wang
+    3. Nick Hynes
+    4. Lars Johnson
+    
+===============================================
+Results for Poll 5 - House Chair
+
+Raw totals:
+  (u'Caitlin Heber', 'None', 'None'): 129
+  ('None', 'None', 'None'): 8
+
+  Stage 1
+    Caitlin Heber: 129
+    => Caitlin Heber wins!
+
+  RESULTS:
+    1. Caitlin Heber
+    
+===============================================
+Results for Poll 6 - Treasurer
+
+Raw totals:
+  (u'Kate Farris', 'None', 'None'): 92
+  ('None', 'None', 'None'): 3
+
+  Stage 1
+    Kate Farris: 92
+    => Kate Farris wins!
+
+  RESULTS:
+    1. Kate Farris
+    
+===============================================
+Results for Poll 7 - Secretary
+
+Raw totals:
+  ('None', 'None', 'None'): 4
+  (u'Will Oursler', 'None', 'None'): 101
+
+  Stage 1
+    Will Oursler: 101
+    => Will Oursler wins!
+
+  RESULTS:
+    1. Will Oursler
+    
+===============================================
+Results for Poll 8 - Social Chairs
+
+Raw totals:
+  (u'Allen Park', u'Caroline Colbert', u'Jessica Greer'): 12
+  (u'Allen Park', u'Caroline Colbert', 'None'): 4
+  (u'Allen Park', u'Jessica Greer', u'Caroline Colbert'): 15
+  (u'Allen Park', u'Jessica Greer', 'None'): 5
+  (u'Allen Park', 'None', 'None'): 27
+  (u'Caroline Colbert', u'Allen Park', u'Jessica Greer'): 6
+  (u'Caroline Colbert', u'Allen Park', 'None'): 3
+  (u'Caroline Colbert', u'Jessica Greer', u'Allen Park'): 10
+  (u'Caroline Colbert', u'Jessica Greer', 'None'): 5
+  (u'Caroline Colbert', 'None', 'None'): 3
+  (u'Jessica Greer', u'Allen Park', u'Caroline Colbert'): 14
+  (u'Jessica Greer', u'Allen Park', 'None'): 5
+  (u'Jessica Greer', u'Caroline Colbert', u'Allen Park'): 10
+  (u'Jessica Greer', u'Caroline Colbert', 'None'): 6
+  (u'Jessica Greer', 'None', 'None'): 13
+  ('None', 'None', 'None'): 3
+
+  Stage 1
+    Allen Park: 63
+    Jessica Greer: 48
+    Caroline Colbert: 27
+    => Caroline Colbert eliminated
+       -> Allen Park: 9
+       -> None: 3
+       -> Jessica Greer: 15
+    
+  Stage 2
+    Allen Park: 72
+    Jessica Greer: 63
+    => Jessica Greer eliminated
+       -> Allen Park: 39
+       -> None: 24
+    
+  Stage 3
+    Allen Park: 111
+    => Allen Park wins!
+
+  RESULTS:
+    1. Allen Park
+    2. Jessica Greer
+    3. Caroline Colbert
+    
+===============================================
+Results for Poll 9 - Athletics Chair
+
+Raw totals:
+  (u'Christian Hyacinthe & Nate Garcia', u'Evan Denmark', 'None'): 31
+  (u'Christian Hyacinthe & Nate Garcia', 'None', 'None'): 51
+  (u'Evan Denmark', u'Christian Hyacinthe & Nate Garcia', 'None'): 25
+  (u'Evan Denmark', 'None', 'None'): 28
+  ('None', 'None', 'None'): 2
+
+  Stage 1
+    Christian Hyacinthe & Nate Garcia: 82
+    Evan Denmark: 53
+    => Evan Denmark eliminated
+       -> None: 28
+       -> Christian Hyacinthe & Nate Garcia: 25
+    
+  Stage 2
+    Christian Hyacinthe & Nate Garcia: 107
+    => Christian Hyacinthe & Nate Garcia wins!
+
+  RESULTS:
+    1. Christian Hyacinthe & Nate Garcia
+    2. Evan Denmark
+    
+===============================================
+Results for Poll 10 - EE Lab Chair
+
+Raw totals:
+  (u'Jack Erdozain', u'Michael Holachek', 'None'): 49
+  (u'Jack Erdozain', 'None', 'None'): 32
+  (u'Michael Holachek', u'Jack Erdozain', 'None'): 19
+  (u'Michael Holachek', 'None', 'None'): 26
+  ('None', 'None', 'None'): 4
+
+  Stage 1
+    Jack Erdozain: 81
+    Michael Holachek: 45
+    => Michael Holachek eliminated
+       -> None: 26
+       -> Jack Erdozain: 19
+    
+  Stage 2
+    Jack Erdozain: 100
+    => Jack Erdozain wins!
+
+  RESULTS:
+    1. Jack Erdozain
+    2. Michael Holachek
+    
+===============================================
+Results for Poll 11 - Librarian
+
+Raw totals:
+  (u'Christina Wettersten', 'None', 'None'): 93
+  ('None', 'None', 'None'): 2
+
+  Stage 1
+    Christina Wettersten: 93
+    => Christina Wettersten wins!
+
+  RESULTS:
+    1. Christina Wettersten
+    
+===============================================
+Results for Poll 12 - Rooming Chair
+
+Raw totals:
+  (u'Elaine Cunha', u'Evan Denmark', u'Juju Wang'): 10
+  (u'Elaine Cunha', u'Evan Denmark', 'None'): 3
+  (u'Elaine Cunha', u'Juju Wang', u'Evan Denmark'): 5
+  (u'Elaine Cunha', u'Juju Wang', 'None'): 2
+  (u'Elaine Cunha', 'None', 'None'): 17
+  (u'Evan Denmark', u'Elaine Cunha', u'Juju Wang'): 6
+  (u'Evan Denmark', u'Elaine Cunha', 'None'): 3
+  (u'Evan Denmark', u'Juju Wang', u'Elaine Cunha'): 13
+  (u'Evan Denmark', u'Juju Wang', 'None'): 1
+  (u'Evan Denmark', 'None', 'None'): 13
+  (u'Juju Wang', u'Elaine Cunha', u'Evan Denmark'): 13
+  (u'Juju Wang', u'Elaine Cunha', 'None'): 2
+  (u'Juju Wang', u'Evan Denmark', u'Elaine Cunha'): 15
+  (u'Juju Wang', u'Evan Denmark', 'None'): 6
+  (u'Juju Wang', 'None', 'None'): 25
+  ('None', 'None', 'None'): 9
+
+  Stage 1
+    Juju Wang: 61
+    Elaine Cunha: 37
+    Evan Denmark: 36
+    => Evan Denmark eliminated
+       -> Elaine Cunha: 9
+       -> None: 13
+       -> Juju Wang: 14
+    
+  Stage 2
+    Juju Wang: 75
+    Elaine Cunha: 46
+    => Elaine Cunha eliminated
+       -> None: 23
+       -> Juju Wang: 23
+    
+  Stage 3
+    Juju Wang: 98
+    => Juju Wang wins!
+
+  RESULTS:
+    1. Juju Wang
+    2. Elaine Cunha
+    3. Evan Denmark
+    
+===============================================
+Results for Poll 13 - Publicity Chair
+
+Raw totals:
+  (u'Cosmos Darwin', 'None', 'None'): 71
+  (u'Cosmos Darwin', u'Wajeeha Ahmad', 'None'): 46
+  ('None', 'None', 'None'): 6
+  (u'Wajeeha Ahmad', u'Cosmos Darwin', 'None'): 12
+  (u'Wajeeha Ahmad', 'None', 'None'): 13
+
+  Stage 1
+    Cosmos Darwin: 117
+    Wajeeha Ahmad: 25
+    => Wajeeha Ahmad eliminated
+       -> None: 13
+       -> Cosmos Darwin: 12
+    
+  Stage 2
+    Cosmos Darwin: 129
+    => Cosmos Darwin wins!
+
+  RESULTS:
+    1. Cosmos Darwin
+    2. Wajeeha Ahmad
+    
+===============================================
+Results for Poll 14 - Facilities Chair
+
+Raw totals:
+  (u'Ada Taylor', u'David Afolabi', 'None'): 26
+  (u'Ada Taylor', 'None', 'None'): 30
+  (u'David Afolabi', u'Ada Taylor', 'None'): 35
+  (u'David Afolabi', 'None', 'None'): 35
+  ('None', 'None', 'None'): 6
+
+  Stage 1
+    David Afolabi: 70
+    Ada Taylor: 56
+    => Ada Taylor eliminated
+       -> None: 30
+       -> David Afolabi: 26
+    
+  Stage 2
+    David Afolabi: 96
+    => David Afolabi wins!
+
+  RESULTS:
+    1. David Afolabi
+    2. Ada Taylor
+    
+===============================================
+Results for Poll 15 - Entertainment Chair
+
+Raw totals:
+  (u'Garrett Schulte & Nadia Magallon', 'None', 'None'): 89
+  ('None', 'None', 'None'): 2
+
+  Stage 1
+    Garrett Schulte & Nadia Magallon: 89
+    => Garrett Schulte & Nadia Magallon wins!
+
+  RESULTS:
+    1. Garrett Schulte & Nadia Magallon
+    
+===============================================
+Results for Poll 16 - Reservations Chair
+
+Raw totals:
+  (u'Joyce Chen', 'None', 'None'): 94
+  ('None', 'None', 'None'): 3
+
+  Stage 1
+    Joyce Chen: 94
+    => Joyce Chen wins!
+
+  RESULTS:
+    1. Joyce Chen
+    
+===============================================
+Results for Poll 17 - Workshop Chair
+
+Raw totals:
+  (u'Emma Steinhardt', 'None', 'None'): 98
+  ('None', 'None', 'None'): 8
+
+  Stage 1
+    Emma Steinhardt: 98
+    => Emma Steinhardt wins!
+
+  RESULTS:
+    1. Emma Steinhardt
+    
+===============================================
+Results for Poll 18 - Historian
+
+Raw totals:
+  (u'XYZ', 'None', 'None'): 1
+
+  Stage 1
+    XYZ: 1
+    => XYZ wins!
+
+  RESULTS:
+    1. XYZ
+    

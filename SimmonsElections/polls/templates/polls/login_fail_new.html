@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>House Government Elections 2013-2014</title>
+    <title>House Elections 2014-2015</title>
     <link href="{% static 'polls/style.css' %}" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
@@ -12,7 +12,7 @@
     <div class="horizontal-region header">
       <div class="content">
         <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
-        <div class="header-txt">House Government Elections 2013-2014</div>
+        <div class="header-txt">House Elections 2014-2015</div>
         <div class="kerberos">not signed in </div>
       </div>
     </div>
@@ -25,14 +25,16 @@
 	{% else %}
 	  
         <div class="helper-txt">
-	  You could not be identified by your certificate as a Simmons Resident or you don't have certificates. If you're silly enough to not have certificates, go get a <a href="http://ist.mit.edu/certificates">MIT certificate</a>. Download the MIT CA and then get your
-	  personal certificate. If you're really silly and don't want to get a certificate, enter your email below for further instructions.<br>
+	  <h1>Login Failed</h1>
+	  <p>You could not be identified by your certificate as a Simmons Resident or you don't have certificates. </p>
+	  <p>If you're silly enough to not have certificates, go get a <a href="http://ist.mit.edu/certificates">MIT certificate</a>. Download the MIT CA and then get your personal certificate.</p>
+	  <p> If you're really silly and don't want to get a certificate, enter your email below for further instructions.</p>
 	  <br>
 	  <form action="{% url 'polls_login_email' %}" method="post">
 	    {% csrf_token %}
 	    Kerberos/MIT Email (For example, something@mit.edu)<br>
 	    <input type="text" name="email" id="email" /><br>
-	    <input type="submit" value="Send an email to me!" />
+	    <input type="submit" value="Get Login Link" />
 	  </form>
 	</div>
 	{% if email_error %}

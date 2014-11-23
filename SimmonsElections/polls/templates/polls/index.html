@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>House Elections 2013-2014</title>
+    <title>House Elections 2014-2015</title>
     <link href="{% static 'polls/style.css' %}" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
@@ -12,7 +12,7 @@
     <div class="horizontal-region header">
       <div class="content">
         <a href="{% url 'poll_list' %}"><img class="header-img" src="{% static 'polls/img/circle-icon.png' %}"></a>
-        <div class="header-txt">House Government Elections 2013-2014</div>
+        <div class="header-txt">House Elections 2014-2015</div>
         <div class="kerberos">signed in as</br><b>{{user.username}}</b></div>
       </div>
     </div>
@@ -20,7 +20,7 @@
       <div class="content">
         <div class="helper-txt">
 	  <p>Hi {{ user.first_name }},</p>
-	  <p>There are sixteen positions up for election. You may choose your 1st, 2nd, and 3rd choice for each position. Results will be determined by instant-runoff voting <a href="http://en.wikipedia.org/wiki/Instant-runoff_voting">[more info]</a>. Until <b>polls close at 5pm on Sunday, November 17</b>, you can come back and change your vote.</p>
+	  <p>There are seventeen positions up for election. You may choose your 1st, 2nd, and 3rd choice for each position. Results will be determined by instant-runoff voting <a href="http://en.wikipedia.org/wiki/Instant-runoff_voting">[more info]</a>. Until <b>polls close at 11:59pm on Saturday, November 29</b>, you can come back and change your vote.</p>
         </div>
 	{% for poll_obj in poll_list %}
         <div class="tile {% if poll_obj.answer != None %}voted{% else %}notyet{% endif %}">
